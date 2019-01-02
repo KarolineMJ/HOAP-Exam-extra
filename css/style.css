@@ -165,7 +165,7 @@ button:focus {
         overflow: hidden;
         text-overflow: ellipsis;
         transform-origin: left bottom;
-        transform: translate(0, 2.125rem) scale(1.2); }
+        transform: translate(0, 1.8rem) scale(1.2); }
       #loginForm form .formField ::-webkit-input-placeholder,
       #messageForm form .formField ::-webkit-input-placeholder,
       #imageForm form .formField ::-webkit-input-placeholder,
@@ -273,7 +273,7 @@ button:focus {
         overflow: hidden;
         text-overflow: ellipsis;
         transform-origin: left bottom;
-        transform: translate(0, 2.125rem) scale(1.2); }
+        transform: translate(0, 1.8rem) scale(1.2); }
       #donationForm form .formField ::-webkit-input-placeholder,
       #signupForm form .formField ::-webkit-input-placeholder {
         opacity: 0;
@@ -625,8 +625,6 @@ button:focus {
     margin-bottom: 0px;
     margin-top: 15px;
     width: 100%; }
-  #frontpageForms #donationForm div.formField .whoswName {
-    font-size: 14px; }
   #frontpageForms #donationForm div.formField form button {
     margin-top: 50px;
     margin-bottom: 0px; }
@@ -1979,11 +1977,20 @@ Keyframes for border radius header image
     #frontpageForms #signupForm,
     #frontpageForms #donationForm,
     #frontpageForms #stuffDonationForm {
-      margin: 50px;
-      padding: 40px;
-      border-radius: h2;
-        border-radius-font-size: 20px;
-        border-radius-margin-top: 0px; }
+      margin: 10vw;
+      padding: 40px; }
+      #sendToUsForms #messageForm h2,
+      #sendToUsForms #imageForm h2,
+      #sendToUsForms #signupForm h2,
+      #sendToUsForms #donationForm h2,
+      #sendToUsForms #stuffDonationForm h2,
+      #frontpageForms #messageForm h2,
+      #frontpageForms #imageForm h2,
+      #frontpageForms #signupForm h2,
+      #frontpageForms #donationForm h2,
+      #frontpageForms #stuffDonationForm h2 {
+        font-size: 20px;
+        margin-top: 0px; }
       #sendToUsForms #messageForm form button,
       #sendToUsForms #imageForm form button,
       #sendToUsForms #signupForm form button,
@@ -2168,7 +2175,9 @@ Keyframes for border radius header image
         Signed in page
 -----------------------*/
   #loginForm {
-    width: 62vw; }
+    width: 100vw; }
+    #loginForm form {
+      width: 100%; }
   #signedInContent #userSettings,
   #signedInContent #newsFeed {
     width: 100vw;
@@ -2312,6 +2321,7 @@ Keyframes for border radius header image
       #intro .introText .catchphrase {
         text-align: center; }
         #intro .introText .catchphrase h1 {
+          padding-top: 65px;
           font-size: 10vw; }
           #intro .introText .catchphrase h1 span {
             font-size: 15vw; }
@@ -2401,7 +2411,7 @@ Keyframes for border radius header image
           width: 70px;
           border-radius: 50%; }
   #footer {
-    padding: 30px 30px 100px 30px;
+    padding: 30px 10vw 100px 10vw;
     grid-template-columns: 1fr; }
     #footer #subscribeForm {
       grid-row-start: 1; }
