@@ -1,0 +1,2927 @@
+/* ----------------------
+       main things
+-----------------------*/
+@import url("https://fonts.googleapis.com/css?family=Raleway");
+@import url("../font/axis-extrabold.otf");
+
+$font: "Raleway", sans-serif;
+$btnHover: #599686;
+$darkbtn: #74b7a5;
+$mainColor: #ead8a6;
+$grayColor: #efefef;
+$darkGrayColor: #cacaca;
+$purpleColor: #2e2f4b;
+$redColor: #a81c1c;
+$breakpoint-mobile: 450px;
+$breakpoint-medium1: 650px;
+$breakpoint-medium2: 900px;
+$breakpoint-desktop: 1100px;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+body::-webkit-scrollbar,
+main::-webkit-scrollbar,
+#animalList::-webkit-scrollbar,
+#animalViewBox::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  font-family: $font;
+}
+
+#addPetForm {
+  background-color: lightblue;
+}
+
+/* -----------------------
+        Navbar 
+------------------------*/
+
+.navbar {
+  position: fixed;
+  z-index: 20;
+  height: 60px;
+  background-color: white;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77);
+  img {
+    width: 150px;
+    padding: 18px;
+    fill: #818181;
+    align-self: center;
+  }
+  //navbar on signed in page
+  #sidebarBtns {
+    display: none;
+    justify-self: end;
+    img {
+      width: 65px;
+      padding: 13px;
+    }
+    #newsBtn {
+      margin-right: 10px;
+    }
+    #newsBtn,
+    #settingBtn {
+      cursor: pointer;
+    }
+  }
+
+  .darkBtn {
+    font-size: 13px;
+    padding: 9px;
+    justify-self: end;
+    align-self: center;
+    margin-right: 10px;
+    :hover {
+      background-color: $btnHover;
+    }
+    a {
+      padding: 7px;
+      background-color: $darkbtn;
+      border-radius: 40px;
+      text-decoration: none;
+      color: #ffffff;
+    }
+    &#signoutAdmin a {
+      background-color: white;
+      color: $purpleColor;
+    }
+  }
+  #signoutAdmin {
+    display: none;
+  }
+}
+
+/*------------------------------
+Forms
+------------------------------*/
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+#loginForm {
+  background-color: white;
+
+  display: none;
+  position: fixed;
+  z-index: 10;
+  right: 0;
+  top: 60px;
+  box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77);
+  form {
+    width: 22vw;
+    .formField {
+      input {
+        border-bottom: 1px solid grey;
+        width: 100%;
+      }
+    }
+  }
+}
+#donationForm,
+#signupForm {
+  background-color: #ded2c3;
+  border-radius: 30px;
+  color: white;
+  form {
+    .formField {
+      input {
+        border-bottom: 1px solid grey;
+        width: 100%;
+      }
+    }
+  }
+}
+
+#messageForm,
+#imageForm,
+#stuffDonationForm {
+  background-color: white;
+}
+#loginForm,
+#messageForm,
+#imageForm,
+#stuffDonationForm {
+  padding: 40px;
+  color: grey;
+  h2 {
+    margin-bottom: 20px;
+  }
+  #wrongPassword {
+    display: none;
+  }
+  form {
+    display: grid;
+
+    .formField {
+      display: flex;
+      flex-flow: column-reverse;
+      margin-bottom: 1em;
+      input {
+        width: 100%;
+        background: none;
+        font-size: 1em;
+        border: 0;
+        border-bottom: 1px solid grey;
+        font-family: inherit;
+
+        -webkit-appearance: none;
+        border-radius: 0;
+        padding: 0;
+        cursor: text;
+        &:focus {
+          outline: 0;
+          border-bottom: 1px solid $btnHover;
+        }
+      }
+      input:placeholder-shown + label {
+        cursor: text;
+        max-width: 66.66%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform-origin: left bottom;
+        transform: translate(0, 2.125rem) scale(1.2);
+      }
+      ::-webkit-input-placeholder {
+        opacity: 0;
+        transition: inherit;
+      }
+      input:not(:placeholder-shown) + label,
+      input:focus + label {
+        transition: 0.2s ease all;
+        transform: translate(0, 0) scale(1);
+        cursor: pointer;
+      }
+      input,
+      label {
+        touch-action: manipulation;
+      }
+    }
+    button {
+      font-family: $font;
+      height: 40px;
+      justify-self: end;
+      padding: 7px;
+      width: 150px;
+      background-color: $darkbtn;
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 40px;
+      cursor: pointer;
+      align-self: end;
+      &:hover {
+        background-color: $btnHover;
+      }
+    }
+    input,
+    button {
+      margin: 20px 0;
+    }
+  }
+}
+
+#donationForm,
+#signupForm {
+  padding: 40px;
+  h2 {
+    margin-bottom: 20px;
+  }
+  form {
+    display: grid;
+    .pickUpBox {
+      input {
+        border: none;
+        background-image: none;
+        background-color: transparent;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        border-bottom: 1px solid #b28973;
+        font-family: inherit;
+      }
+    }
+    .formField {
+      display: flex;
+      flex-flow: column-reverse;
+      margin-bottom: 1em;
+      input {
+        width: 100%;
+        background: none;
+        font-size: 1em;
+        border: 0;
+        border-bottom: 1px solid #b28973;
+        font-family: inherit;
+        -webkit-appearance: none;
+        border-radius: 0;
+        padding: 0;
+        cursor: text;
+        &:focus {
+          outline: 0;
+          border-bottom: 1px solid #b28973;
+        }
+      }
+      input:placeholder-shown + label {
+        cursor: text;
+        color: #b28973;
+        max-width: 66.66%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform-origin: left bottom;
+        transform: translate(0, 2.125rem) scale(1.2);
+      }
+      ::-webkit-input-placeholder {
+        opacity: 0;
+        transition: inherit;
+      }
+      input:not(:placeholder-shown) + label,
+      input:focus + label {
+        transition: 0.2s ease all;
+        transform: translate(0, 0) scale(1);
+        cursor: pointer;
+      }
+      input,
+      label {
+        color: #b28973;
+        touch-action: manipulation;
+      }
+    }
+    button {
+      font-family: $font;
+      height: 40px;
+      justify-self: end;
+      padding: 7px;
+      width: 150px;
+      background-color: #b28973;
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 40px;
+      cursor: pointer;
+      align-self: end;
+      &:hover {
+        background-color: #916a56;
+      }
+    }
+    input {
+      margin: 20px 0;
+    }
+    button {
+      margin-top: 40px;
+      margin-bottom: 0px;
+    }
+  }
+}
+
+#subscribeForm {
+  form {
+    display: grid;
+    .formField {
+      display: flex;
+      flex-flow: column-reverse;
+      margin-bottom: 1.5em;
+      input {
+        width: 100%;
+        color: #ffffff;
+        background-color: rgba(0, 0, 0, 0);
+        font-size: 1em;
+        border: 0;
+        border-bottom: 1px solid white;
+        font-family: inherit;
+        -webkit-appearance: none;
+        border-radius: 0;
+        padding: 0;
+        cursor: text;
+        &:focus {
+          outline: 0;
+          transition: 0.2s ease all;
+
+          border-bottom: 2px solid white;
+        }
+      }
+      input:placeholder-shown + label {
+        cursor: text;
+        max-width: 66.66%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform-origin: left bottom;
+        transform: translate(0, 1.1rem) scale(1.2);
+      }
+      ::-webkit-input-placeholder {
+        opacity: 0;
+        transition: inherit;
+      }
+      input:not(:placeholder-shown) + label,
+      input:focus + label {
+        transition: 0.2s ease all;
+        transform: translate(0, 0) scale(1);
+        cursor: pointer;
+      }
+      input,
+      label {
+        touch-action: manipulation;
+      }
+    }
+    button {
+      font-family: $font;
+      height: 40px;
+      justify-self: end;
+      padding: 7px;
+      width: 150px;
+      background-color: #759189;
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 40px;
+      cursor: pointer;
+      align-self: end;
+      &:hover {
+        background-color: #637e76;
+      }
+    }
+  }
+}
+
+.sendImageUser {
+  height: 40px;
+  color: white;
+  margin-top: 30px;
+  padding-bottom: 30px;
+  input {
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+  }
+  label {
+    cursor: pointer;
+    color: #808080;
+  }
+}
+
+/* -----------------------
+        Frontpage 
+------------------------*/
+#intro {
+  padding-top: 60px;
+  background-color: #ead8a6;
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  .introText {
+    padding-left: 10vw;
+    width: 42vw;
+    align-self: center;
+
+    .catchphrase {
+      justify-self: center;
+      padding-bottom: 30px;
+      h1 {
+        font-family: "axis-extrabold", sans-serif;
+        line-height: 1;
+        color: rgba($color: white, $alpha: 0.7);
+        font-size: 6vw;
+        span {
+          font-size: 8.5vw;
+          &::before {
+            content: "\A";
+            white-space: pre;
+          }
+        }
+      }
+    }
+    p {
+      color: #c18e63;
+    }
+  }
+  .introPic {
+    display: grid;
+    position: relative;
+    .dots {
+      position: relative;
+
+      div:nth-child(1) {
+        width: 40px;
+        top: 16vh;
+        right: 10vw;
+        height: 40px;
+        background-color: rgba($color: white, $alpha: 0.6);
+        position: absolute;
+        border-radius: 70% 37% 40% 46% / 45% 48% 50% 45%;
+      }
+      div:nth-child(2) {
+        width: 20px;
+        top: 25vh;
+        right: 8vw;
+        height: 20px;
+        background-color: rgba($color: white, $alpha: 0.7);
+        position: absolute;
+        border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+      }
+      div:nth-child(3) {
+        width: 15px;
+        top: 70vh;
+        right: 12vw;
+        height: 15px;
+        background-color: rgba($color: white, $alpha: 0.7);
+        position: absolute;
+        border-radius: 27% 37% 54% 46% / 55% 48% 52% 45%;
+      }
+      div:nth-child(4) {
+        width: 20px;
+        top: 20vh;
+        left: 2vw;
+        height: 20px;
+        background-color: rgba($color: white, $alpha: 0.7);
+        position: absolute;
+        border-radius: 46% 50% 54% 46% / 55% 30% 52% 45%;
+      }
+    }
+    .circle {
+      position: absolute;
+      align-self: center;
+      img {
+        width: 40vw;
+        background-color: rgba($color: white, $alpha: 0.7);
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        //animation: morphing 10s infinite;
+        animation: morph 15s ease-in-out infinite both alternate;
+      }
+    }
+
+    .introCat {
+      position: absolute;
+      align-self: center;
+      top: 400px;
+      left: -7vw;
+      img {
+        width: 23vw;
+      }
+    }
+
+    .introDog {
+      position: absolute;
+      align-self: center;
+      top: 238px;
+      left: 14vw;
+      img {
+        width: 31vw;
+      }
+    }
+  }
+}
+
+.fullsize {
+  width: 100%;
+  height: 100vh;
+}
+#aboutUs {
+  display: grid;
+  align-self: center;
+  background-color: #efefef;
+  color: #aeaeae;
+  text-align: center;
+  padding: 10vw;
+
+  #walkDog,
+  #errandCar,
+  #coinCat {
+    background-color: #ffffff;
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    display: grid;
+    margin: 20px auto;
+
+    svg {
+      width: 180px;
+      place-self: center;
+    }
+  }
+  #walkDog {
+    height: 200px;
+    width: 200px;
+    display: grid;
+    margin: 20px auto;
+
+    #dogEyes {
+      animation: eyeBlink 5s infinite;
+      transform-origin: 50% 40%;
+    }
+    #dogTail {
+      animation: moveTail 2s infinite;
+      transform-origin: bottom left;
+    }
+  }
+
+  #errandCar {
+    #leftwheel {
+      animation: rotateWheel 0.6s infinite linear reverse;
+      transform-origin: 20.2% 74.7%;
+    }
+
+    #rightwheel {
+      animation: rotateWheel 0.6s infinite linear reverse;
+      transform-origin: 74.7% 74.5%;
+    }
+    #car {
+      animation: carBounce 1s infinite alternate-reverse ease-in-out;
+    }
+    #box3,
+    #box1 {
+      animation: boxSideBounce 1s infinite alternate-reverse ease-in-out;
+    }
+
+    #box2 {
+      animation: boxMiddleBounce 1s infinite alternate-reverse ease-in-out;
+    }
+
+    #cattree {
+      animation: catTreeBounce 1s infinite alternate-reverse ease-in-out;
+
+      #ball {
+        animation: ballSwing 1s infinite alternate-reverse ease-in-out;
+        transform-origin: 76.3% 19%;
+      }
+    }
+  }
+
+  #coinCat {
+    #catHead {
+      animation: moveHead 2s 0.5s infinite;
+      transform-origin: 50%;
+    }
+    #coin {
+      animation: coinFall 2s ease-in-out infinite;
+    }
+    #catEyes {
+      animation: moveHead 2s 0.5s infinite;
+      transform-origin: 50%;
+    }
+  }
+
+  h1 {
+    align-self: center;
+  }
+  .aboutCont {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 70px;
+    h2 {
+      margin: 20px 0;
+    }
+    .aboutImg {
+      background-color: #ffffff;
+      border-radius: 50%;
+      height: 200px;
+      width: 200px;
+      display: grid;
+      margin: 20px auto;
+      img {
+        height: 175px;
+        align-self: center;
+      }
+    }
+  }
+}
+
+#lastBox {
+  color: white;
+  display: grid;
+  h2 {
+    text-align: center;
+    align-self: end;
+    margin: 20px 0;
+  }
+  #animalImage {
+    padding: 20px 10vw;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    div {
+      margin: 20px 0;
+      justify-self: center;
+
+      img {
+        width: 8vw;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+#sendToUsForms {
+  background-color: $mainColor;
+}
+
+#frontpageForms,
+#sendToUsForms {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  #messageForm,
+  #imageForm,
+  #stuffDonationForm {
+    border-radius: 30px;
+    display: grid;
+    margin: 5vw 0 10vw 0;
+    padding: 40px;
+    border-radius: 30px;
+  }
+  #donationForm,
+  #signupForm {
+    margin: 3vw 10vw 10vw 10vw;
+    padding: 40px;
+    border-radius: 30px;
+  }
+}
+#sendToUsForms {
+  padding: 0 10vw;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 4vw;
+}
+#frontpageForms {
+  #donationForm {
+    label {
+      color: #b28973;
+    }
+    h2 {
+      margin-bottom: 0px;
+    }
+    p {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    div.formField {
+      margin-bottom: 0px;
+      input,
+      #donateWhat {
+        margin-bottom: 0px;
+        margin-top: 15px;
+        width: 100%;
+      }
+      .whoswName {
+        font-size: 14px;
+      }
+      form {
+        button {
+          margin-top: 50px;
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
+  #signupForm {
+    label.formLabel {
+      color: #b28973;
+    }
+  }
+}
+/* -----------------------
+        signed in page
+------------------------*/
+
+#mobileMenu {
+  display: none;
+}
+#signedInContent {
+  #aboutLoggedIn {
+    width: 100%;
+    color: #c18e63;
+    padding: 5vw 10vw 0 10vw;
+    background-color: #ead8a6;
+    h2 {
+      padding-bottom: 20px;
+    }
+  }
+  #yourPets {
+    padding: 150px 10vw 0 10vw;
+    background-color: $grayColor;
+    color: grey;
+    position: relative;
+
+    //display: grid;
+    //grid-template-rows: 20vh 1fr;
+    hr {
+      position: relative;
+      top: -60px;
+      opacity: 0;
+    }
+    #petChoices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr;
+      div {
+        align-self: end;
+        input,
+        label {
+          margin: 20px 0;
+        }
+      }
+      p {
+        align-self: end;
+        justify-self: end;
+        margin: 20px 0;
+      }
+    }
+
+    #animalBox {
+      display: grid;
+      grid-template-columns: 15px 1fr 15px;
+      .animalArrows {
+        align-self: center;
+      }
+      i {
+        border: solid #948a92;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 3px;
+        cursor: pointer;
+      }
+
+      .right {
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+      }
+
+      .left {
+        transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+      }
+      #animalViewBox {
+        height: 250px;
+        width: 870px;
+        overflow: scroll;
+        white-space: nowrap;
+        justify-self: center;
+        #animalList {
+          position: relative;
+          .eachAnimal {
+            margin: 12px;
+            display: inline-block;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            position: relative;
+            > * {
+              position: absolute;
+            }
+            > p {
+              width: 100%;
+              text-align: center;
+              bottom: -15%;
+            }
+            > img:not(.heart) {
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+            }
+            .heart {
+              width: 15%;
+              left: 10%;
+              bottom: -15%;
+            }
+            .statusCircle {
+              width: 10px;
+              height: 10px;
+              right: 10%;
+              top: 10%;
+              box-shadow: 3px 1px 17px 3px rgba(255, 255, 255, 0.83);
+              background-color: #a81c1c;
+              border-radius: 50%;
+            }
+            cursor: pointer;
+            * {
+              pointer-events: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .triangleUp {
+    display: none;
+    position: absolute;
+    left: 50px;
+    bottom: -88px;
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid white;
+  }
+  #petExpand {
+    color: #716f6f;
+    width: 100%;
+    height: auto;
+    padding: 60px 50px;
+    background-color: white;
+    grid-column: 1/-1;
+    z-index: 2;
+    display: none;
+    grid-template-columns: 0.6fr 1.2fr 1.2fr;
+    grid-template-rows: auto auto;
+    grid-column-gap: 35px;
+    .bigAnimalImage {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: $darkbtn;
+    }
+    .bigAnimalInfo {
+      .bigAnimalBasicInfo {
+        padding-bottom: 16px;
+        p {
+          padding-bottom: 0;
+          font-weight: bold;
+          span {
+            font-weight: normal;
+          }
+        }
+        .needs {
+          font-weight: normal;
+        }
+      }
+      .bigAnimalStory {
+        p {
+          font-weight: bold;
+        }
+        .animalStory {
+          line-height: 1.6;
+          font-weight: normal;
+        }
+      }
+    }
+    .storyAndExtra {
+    }
+    .memberDonation {
+      *.crossout {
+        text-decoration: line-through;
+      }
+      #donationFormLogginIn {
+        display: grid;
+        height: 100%;
+        h3 {
+          padding: 10px;
+        }
+        #donationBtn {
+          font-size: 13px;
+          font-family: "Raleway", sans-serif;
+          height: 40px;
+          justify-self: end;
+          padding: 7px;
+          margin: 11px 0;
+          width: 150px;
+          background-color: $darkbtn;
+          border: none;
+          color: white;
+          text-align: center;
+          text-decoration: none;
+          border-radius: 40px;
+          cursor: pointer;
+          align-self: end;
+          &:hover {
+            background-color: $btnHover;
+          }
+        }
+      }
+    }
+
+    position: relative;
+    .closeExpandBtn {
+      cursor: pointer;
+      position: absolute;
+      font-size: 40px;
+      right: 30px;
+      top: 20px;
+      font-size: 40px;
+    }
+    .donateBtn {
+      cursor: pointer;
+      position: absolute;
+      right: 50px;
+      top: 50px;
+    }
+    h2 {
+      text-align: left;
+      padding: 10px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 10px;
+      li {
+        text-decoration: none;
+        padding: 0;
+        text-align: left;
+      }
+    }
+
+    p {
+      text-align: left;
+      padding: 10px;
+    }
+
+    .expandImg {
+      width: 20vw;
+      align-self: center;
+
+      img {
+        border-radius: 50%;
+        width: 20vw;
+      }
+    }
+  }
+
+  #sendToUsForms {
+    background-color: $mainColor;
+  }
+
+  #userSettings {
+    #donationStatus {
+      p {
+        padding: 5px 0px;
+        img {
+          position: relative;
+          width: 20px;
+          top: 5px;
+        }
+      }
+      #signOut {
+        margin: 20px 0;
+      }
+    }
+    #currentSettings {
+      h5 {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+      #updatePrefBtn {
+        margin: 20px 0;
+      }
+      #montlyDonationMember {
+        input {
+          width: 95%;
+        }
+      }
+    }
+  }
+
+  #newsFeed {
+    p {
+      padding: 20px 0;
+      border-bottom: 1px solid #eaeaea;
+    }
+  }
+  #userSettings,
+  #newsFeed {
+    color: #717070;
+    display: none;
+    box-shadow: 3px 1px 17px 3px rgba(155, 155, 155, 0.68);
+    z-index: 3;
+    height: calc(100vh - 60px);
+    overflow: scroll;
+    background-color: white;
+    position: fixed;
+    right: 0;
+    top: 60px;
+    width: 280px;
+    padding: 20px;
+    & > * {
+    }
+
+    h2 {
+      padding-bottom: 10px;
+      font-weight: 100;
+      font-size: 1.3em;
+    }
+    h3,
+    h5 {
+      padding: 10px 0px;
+      font-weight: 300;
+    }
+
+    h5 {
+      font-size: 1em;
+    }
+    div {
+      padding: 5px 0px;
+
+      label {
+        font-size: 0.8em;
+        input[type="checkbox"] {
+          margin-right: 10px;
+        }
+      }
+    }
+    hr {
+      margin-bottom: 10px;
+    }
+
+    .user {
+      display: grid;
+      grid-template-columns: 1fr 6vw;
+      img {
+        place-self: center;
+        width: 4vw;
+        border-radius: 50%;
+      }
+      p {
+        align-self: center;
+      }
+    }
+    button {
+      font-family: $font;
+      height: 40px;
+      justify-self: end;
+      padding: 7px;
+      width: 100%;
+      background-color: $darkbtn;
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 40px;
+      cursor: pointer;
+      align-self: end;
+      &:hover {
+        background-color: $btnHover;
+      }
+      &#cancelMembership {
+        background: $redColor;
+        &:hover {
+          background: #9c1818;
+        }
+      }
+    }
+  }
+}
+
+/*-------------------------
+Preferences
+------------------------*/
+#preferencesModal {
+  display: none;
+  position: fixed;
+  z-index: 30;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+  input[type="range"] {
+    margin: 15px 0;
+    width: 250px;
+  }
+  #skipPrefBtn {
+    cursor: pointer;
+    float: right;
+    background-color: $darkbtn;
+  }
+  .modalContent {
+    display: grid;
+    color: #717070;
+    background-color: #fefefe;
+    margin: auto;
+    border: 1px solid #888;
+    width: 80%;
+    form,
+    h1,
+    span {
+      padding: 40px 5vw;
+    }
+    #modalTop {
+      display: grid;
+      grid-template-columns: 1fr 10%;
+      color: white;
+      background-color: $darkbtn;
+      span {
+        justify-self: end;
+      }
+      #skipPrefBtn {
+        color: white;
+      }
+    }
+
+    .formField {
+      display: flex;
+      flex-flow: column-reverse;
+      margin-bottom: 1em;
+      input {
+        background: none;
+        font-size: 1em;
+        border: 0;
+        border-bottom: 1px solid grey;
+        font-family: inherit;
+        width: 100%;
+        -webkit-appearance: none;
+        border-radius: 0;
+        padding: 0;
+        cursor: text;
+        &:focus {
+          outline: 0;
+          border-bottom: 1px solid $btnHover;
+        }
+      }
+      input:placeholder-shown + label {
+        cursor: text;
+        max-width: 66.66%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform-origin: left bottom;
+        transform: translate(0, 1.125rem) scale(1.2);
+      }
+      ::-webkit-input-placeholder {
+        opacity: 0;
+        transition: inherit;
+      }
+      input:not(:placeholder-shown) + label,
+      input:focus + label {
+        transition: 0.2s ease all;
+        transform: translate(0, 0) scale(1);
+        cursor: pointer;
+      }
+      input,
+      label {
+        touch-action: manipulation;
+      }
+    }
+    form {
+      display: grid;
+      h3 {
+        padding-top: 20px;
+        i {
+          font-size: 13px;
+        }
+      }
+      h5 {
+        padding-top: 15px;
+        padding-bottom: 5px;
+      }
+      div {
+        padding: 5px 0px;
+      }
+      #submitPrefBtn {
+        font-family: "Raleway", sans-serif;
+        height: 40px;
+        justify-self: end;
+        padding: 7px;
+        width: 175px;
+        background-color: $darkbtn;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 40px;
+        cursor: pointer;
+        align-self: end;
+        margin: 25px 0 0 0;
+      }
+    }
+  }
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+}
+
+.form-popup {
+  display: none;
+  height: 100vh;
+  background-color: #dee9f2;
+
+  .popup-form-container {
+    padding: 10px;
+    background-color: white;
+    width: 70%;
+    margin: auto;
+
+    .popup-form-container .btn {
+      background-color: #dee9f2;
+      color: #60748c;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100px;
+      margin-bottom: 10px;
+
+      border-radius: 40px;
+    }
+  }
+}
+
+/*-------------------------
+Keyframes for border radius header image
+------------------------*/
+
+@keyframes morph {
+  100% {
+    border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+  }
+  14% {
+    border-radius: 40% 60% 54% 46% / 49% 60% 40% 51%;
+  }
+  28% {
+    border-radius: 54% 46% 38% 62% / 49% 70% 30% 51%;
+  }
+  42% {
+    border-radius: 61% 39% 55% 45% / 61% 38% 62% 39%;
+  }
+  56% {
+    border-radius: 61% 39% 67% 33% / 70% 50% 50% 30%;
+  }
+  70% {
+    border-radius: 50% 50% 34% 66% / 56% 68% 32% 44%;
+  }
+  84% {
+    border-radius: 46% 54% 50% 50% / 35% 61% 39% 65%;
+  }
+}
+
+/* -----------------------
+        Keyframes for "what you can do" animations 
+------------------------*/
+
+//Keyframes for cat
+
+@keyframes coinFall {
+  from {
+    transform: translateY(0px);
+  }
+
+  to {
+    transform: translateY(400px);
+  }
+}
+
+@keyframes moveHead {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
+//Keyframes for dog
+
+@keyframes moveTail {
+  0% {
+    transform: rotate(-2deg);
+  }
+  10% {
+    transform: rotate(4deg);
+  }
+  20% {
+    transform: rotate(-2deg);
+  }
+  30% {
+    transform: rotate(4deg);
+  }
+  40% {
+    transform: rotate(-2deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+  60% {
+    transform: rotate(-2deg);
+  }
+  70% {
+    transform: rotate(4deg);
+  }
+
+  80% {
+    transform: rotate(-2deg);
+  }
+
+  90% {
+    transform: rotate(4deg);
+  }
+  100% {
+    transform: rotate(-2deg);
+  }
+}
+@keyframes eyeBlink {
+  0% {
+    transform: scaleY(0);
+  }
+  10% {
+    transform: scaleY(0);
+  }
+  15% {
+    transform: scaleY(1);
+  }
+  48% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0);
+  }
+  52% {
+    transform: scaleY(1);
+  }
+  90% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+
+//Keyframes for car
+@keyframes carBounce {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(2%);
+  }
+}
+
+@keyframes rotateWheel {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes catTreeBounce {
+  from {
+    transform: translateY(-1%);
+  }
+  to {
+    transform: translateY(3%);
+  }
+}
+
+@keyframes boxSideBounce {
+  from {
+    transform: translateY(-2%);
+  }
+  to {
+    transform: translateY(2%);
+  }
+}
+
+@keyframes boxMiddleBounce {
+  from {
+    transform: translateY(-4%);
+  }
+  to {
+    transform: translateY(3%);
+  }
+}
+
+@keyframes ballSwing {
+  from {
+    transform: rotate(2deg);
+  }
+  to {
+    transform: rotate(-6deg);
+  }
+}
+/* -----------------------
+        footer 
+------------------------*/
+#footer {
+  padding: 50px 10vw;
+  color: #ffffff;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #a6bdb7;
+  h3 {
+    margin-bottom: 20px;
+  }
+  .contactInfo {
+    margin-bottom: 20px;
+  }
+  .soMeBtn {
+    svg {
+      fill: #ffffff;
+    }
+  }
+}
+.visible {
+  display: block !important;
+}
+
+/* -----------------------
+        admin 
+------------------------*/
+#admin {
+  display: none;
+  position: relative;
+  .hiAdminBtn a {
+    background: transparent;
+    color: $purpleColor;
+  }
+  aside {
+    position: fixed;
+    top: 60px;
+    width: 15%;
+    height: 100vh;
+    padding: 50px 25px;
+    background: $mainColor;
+
+    li {
+      list-style: none;
+      margin-bottom: 50px;
+      a {
+        color: #b28973;
+        background-color: $mainColor;
+        text-decoration: none;
+        font-size: 24px;
+        width: calc(100% + 50px);
+        position: relative;
+        left: -25px;
+        display: inline-block;
+        padding: 30px 25px;
+      }
+    }
+  }
+  .activeAnchor {
+    color: #b28973;
+    background-color: white;
+    transition: background-color 0.7s ease;
+  }
+  main {
+    position: absolute;
+    width: 85%;
+    height: calc(100vh - 60px);
+    top: 60px;
+    right: 0;
+    overflow-y: scroll;
+    .section {
+      border-bottom: 7px dotted $purpleColor;
+      height: auto;
+      min-height: 300px; /* delete me later when all sections are finished */
+      p {
+        line-height: 1.3;
+        &:last-of-type {
+          margin-bottom: 2em;
+        }
+      }
+      .subsection {
+        height: auto;
+        padding: 80px 10vw;
+        position: relative;
+        &.otherToDo {
+          padding: 50px 10vw;
+        }
+        h2 {
+          margin-bottom: 20px;
+        }
+        .extraNotice {
+          margin: 15px 0;
+          font-weight: bold;
+        }
+        .date {
+          font-size: 24px;
+          padding-bottom: 10px;
+          margin-bottom: 0;
+        }
+        .subsectionHeader {
+          margin-bottom: 20px;
+          display: grid;
+          grid-template-columns: 190px auto 150px;
+          p {
+            margin: 0;
+            align-self: center;
+          }
+          span {
+            display: inline-block;
+            padding-top: 10px;
+            align-self: center;
+            input {
+              width: 95%; /* temp solution */
+              font-size: 16px;
+              border: none;
+              border-bottom: 1px solid $purpleColor;
+            }
+          }
+
+          .adminBtn {
+            cursor: pointer;
+            text-align: center;
+            background: $darkbtn;
+            width: 100%;
+            height: 40px;
+            padding: 10px 30px; /* temp solution, should achieve vertical align */
+            border-radius: 25px;
+            color: white;
+          }
+        }
+        p {
+          img {
+            vertical-align: middle;
+            width: 20px;
+          }
+        }
+        .subsectionToDo {
+          width: 100%;
+          height: 50px;
+          display: grid;
+          grid-template-columns: auto 150px;
+          span {
+            display: inline-block;
+            padding-top: 10px;
+            img {
+              vertical-align: middle;
+              width: 20px;
+            }
+            input {
+              width: 95%; /* temp solution */
+              font-size: 16px;
+              border: none;
+              border-bottom: 1px solid $purpleColor;
+            }
+          }
+          .adminBtn {
+            cursor: pointer;
+            text-align: center;
+            background: $darkbtn;
+            width: 100%;
+            height: 40px;
+            padding: 10px 30px; /* temp solution, should achieve vertical align */
+            border-radius: 25px;
+            color: white;
+          }
+        }
+        .tableWrapper {
+          width: 100%;
+          height: 370px;
+          margin: 0 auto;
+          position: relative;
+          .firstColumn {
+            position: absolute;
+            width: 20%;
+            height: 100%;
+            background-color: #efefef;
+            display: grid;
+            grid-template-rows: 100px 50px 50px 50px 50px 70px;
+            .head {
+              height: 100px;
+              background-color: #e7debc;
+              display: grid;
+            }
+            .row {
+              padding: 20px;
+              img {
+                width: 30px;
+                vertical-align: middle;
+              }
+            }
+            .row:not(.head):not(:last-of-type) {
+              border-bottom: 1px solid #efefef;
+            }
+            b {
+              color: $purpleColor;
+              place-self: center;
+            }
+          }
+          .columns {
+            overflow-x: scroll;
+            overflow-y: hidden;
+            position: absolute;
+            left: 20%;
+            width: 80%;
+            display: grid;
+            grid-template-columns: repeat(30, auto);
+            white-space: nowrap;
+            .column {
+              border-right: 1px solid #cacaca;
+              display: grid;
+              grid-template-rows: 100px 50px 50px 50px 50px 70px;
+              *:not(.animalImage) {
+                pointer-events: none;
+                input[type="checkbox"] {
+                  pointer-events: initial;
+                }
+              }
+              &:last-of-type {
+                border-right: none;
+              }
+              div:nth-child(1) {
+                background-color: #e7debc;
+              }
+              .animalImage {
+                padding: 10px 23px;
+                display: grid;
+                cursor: pointer;
+                img {
+                  width: 70px;
+                  height: 70px;
+                  border-radius: 35px;
+                  border-radius: 50%;
+                  place-self: center;
+                }
+              }
+
+              .noTask {
+                background-image: url(../img/icons/notaskbg.png);
+                background-size: 242px;
+              }
+              .row {
+                padding: 20px; /* temp solution, should achieve vertical align */
+                border-bottom: 1px solid #cacaca;
+                img {
+                  width: calc(100% + 40px);
+                  height: calc(100% + 40px);
+                  position: relative;
+                  left: -20px;
+                  top: -20px;
+
+                  .memberName {
+                    font-size: 13px;
+                    margin-left: 5px; /* temp setting */
+                  }
+                }
+                .row:not(:last-of-type):not(.head) {
+                  border-bottom: 1px solid #cacaca;
+                }
+              }
+            }
+          }
+        }
+        .animalDetailModal {
+          z-index: 3;
+          position: absolute;
+          bottom: -260px; // temp solution
+          left: 0;
+          width: 85vw;
+          height: 550px;
+          padding: 50px;
+          background: white;
+          box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77);
+          border: 2px solid $purpleColor;
+          display: grid;
+          grid-template-columns: 170px auto 170px;
+          grid-gap: 50px;
+          .animalImageBig {
+            height: 170px;
+            border-radius: 50%;
+            overflow: hidden;
+            img {
+              width: 170px;
+            }
+          }
+          .animalDetails {
+            display: grid;
+            grid-template-columns: 200px auto;
+            grid-template-rows: 270px;
+            grid-gap: 20px;
+            .animalName {
+              /* need to deal with the case if the name is super long? */
+              font-weight: bold;
+              font-size: 19px;
+              height: 30px;
+              margin-bottom: 20px;
+            }
+            li {
+              margin-bottom: 0.5em;
+              input {
+                height: 30px;
+              }
+            }
+            input {
+              border: none;
+              border-bottom: 1px dashed $purpleColor;
+              font-size: 16px;
+            }
+            .needAndStory {
+              padding-top: 60px; // avoid overlapping in case animal name is super long
+              p {
+                margin-bottom: 1rem;
+              }
+              section.story textarea {
+                width: 100%;
+                height: 170px;
+                line-height: 1.5;
+                font-size: 13px;
+              }
+            }
+            label {
+              margin-right: 20px;
+            }
+            input[type="checkbox"],
+            input[type="radio"] {
+              margin-right: 5px;
+            }
+          }
+          .buttons button {
+            display: block;
+            height: 40px; /* need to unify button style */
+            width: 100px;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 20px;
+            background: $purpleColor;
+            color: white;
+            cursor: pointer;
+            &.closeModal {
+              margin-bottom: 190px;
+              background: none;
+              color: $purpleColor;
+              font-size: 24px;
+            }
+            &.deleteAnimal:hover {
+              background: red;
+            }
+          }
+          &.hide {
+            display: none;
+          }
+        }
+        .toDoListWrapper {
+          width: 70%; /* temp solution. Need to figure out if and how should this part be aligned to other elements */
+          margin: 0 26px;
+          //display: grid;
+          //grid-template-columns: 1fr 1fr;
+          span {
+            margin-left: 15px;
+            //margin-left: 40px;
+          }
+          span.userMessage {
+            color: red;
+          }
+
+          div {
+            line-height: 2rem;
+            input[type="checkbox"] {
+              //margin-right: 40px;
+              margin-left: -25px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .adminForm {
+    overflow-y: scroll;
+    position: fixed;
+    z-index: 2;
+    right: 0;
+    top: 60px;
+    width: 30%;
+    height: calc(100vh - 60px);
+    background: white;
+    border-left: 1px solid $purpleColor;
+    padding: 40px;
+    &.hide {
+      display: none;
+    }
+    .close {
+      position: absolute;
+      right: 50px;
+      top: 50px;
+      cursor: pointer;
+    }
+  }
+}
+
+.addAnimalForm {
+  p:nth-child(1),
+  p:nth-child(10),
+  p:nth-child(13),
+  p:nth-child(19) {
+    font-size: 1.2em;
+  }
+
+  p:nth-child(9) {
+    label {
+      padding: 0;
+    }
+  }
+
+  p {
+    padding: 10px 0px;
+    label {
+      padding-left: 5px;
+    }
+  }
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    padding: 6px;
+    border: 1px solid #999;
+    width: 100%;
+
+    box-sizing: border-box;
+    outline: none;
+  }
+
+  .addAnimalToDB {
+    background-color: $purpleColor;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    padding: 10px 30px;
+    border-radius: 25px;
+    color: white;
+  }
+
+  div {
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    padding: 10px 30px;
+    border: 2px solid $purpleColor;
+    border-radius: 25px;
+    color: white;
+    #uploadBtnAdmin {
+      pointer-events: none;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+    }
+    label {
+      cursor: pointer;
+      color: $purpleColor;
+    }
+  }
+}
+// here starts POST AND NOTIFY!!
+#postAndNotify {
+  padding: 70px 10vw;
+  height: auto;
+  h3 {
+    padding: 20px 0;
+    //padding: 15px 0;
+  }
+  .postsContainer {
+    height: auto;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    margin-bottom: 60px;
+    .publishContainer {
+      border-right: 1px solid black;
+      padding-right: 50px;
+      display: grid;
+      p {
+        //padding: 15px 0;
+        //padding-bottom: 30px;
+        width: 90%;
+      }
+
+      .receviedPictures {
+        // border: 1px solid black;
+        width: 100%;
+        height: calc(54vh + 34px);
+        overflow: scroll;
+        display: grid;
+        grid-template-columns: 18vh 18vh 18vh;
+        grid-template-rows: 18vh 18vh 18vh;
+        grid-gap: 17px;
+        justify-content: center;
+        .singlePic {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          background-size: cover;
+          label {
+            display: inline-block;
+            width: 130px;
+            height: 130px;
+          }
+        }
+      }
+      .publishBtn {
+        justify-self: end;
+        align-self: end;
+        right: 0px;
+        bottom: -45px;
+        cursor: pointer;
+        text-align: center;
+        background: $darkbtn;
+        height: 40px;
+        padding: 10px 30px; /* temp solution, should achieve vertical align */
+        border-radius: 25px;
+        color: white;
+        border: none;
+      }
+    }
+    .dragAndDropContainer {
+      padding: 0 0 0 50px;
+      position: relative;
+      height: 100%;
+      p:nth-child(1) {
+      }
+      p:nth-child(2) {
+        padding: 15px 0;
+        padding-bottom: 30px;
+      }
+      p:nth-child(3) {
+        padding: 15px 0;
+      }
+
+      label {
+        margin-bottom: 10px;
+        input {
+          margin-right: 10px;
+        }
+      }
+      .writeNotification {
+        height: 150px;
+        width: 100%;
+        display: block;
+      }
+      #nofiticationAdmin {
+        p {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+      }
+      div {
+        text-align: center;
+        height: 40px;
+        padding: 10px 30px;
+        border: 2px solid $darkbtn;
+        border-radius: 25px;
+        color: white;
+        margin: auto;
+        margin-top: 30px;
+        padding-bottom: 30px;
+        #uploadFileAdmin {
+          pointer-events: none;
+          opacity: 0;
+          overflow: hidden;
+          position: absolute;
+        }
+        label {
+          cursor: pointer;
+          color: $purpleColor;
+        }
+      }
+      .postBtn {
+        margin: 30px 0px;
+        width: 100%;
+        margin-bottom: 0;
+        right: 0px;
+        bottom: -22px;
+        cursor: pointer;
+        text-align: center;
+        background: $darkbtn;
+        height: 40px;
+        padding: 10px 30px; /* temp solution, should achieve vertical align */
+        border-radius: 25px;
+        color: white;
+        border: none;
+      }
+    }
+  }
+}
+
+// status section
+#status {
+  padding: 85px 10vw;
+  h2 {
+    padding-bottom: 20px;
+  }
+  hr:last-of-type {
+    margin-bottom: 10px;
+  }
+  h3 {
+    margin-bottom: 10px;
+  }
+  p {
+    margin-top: 15px;
+  }
+  .Economy {
+    p {
+      img {
+        height: 20px;
+      }
+    }
+  }
+
+  .animalStatus {
+    div {
+      p {
+        margin-bottom: 15px;
+      }
+    }
+    p {
+      margin-bottom: 15px;
+      img {
+        height: 20px;
+      }
+    }
+  }
+  .monthsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 75px);
+
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    .month {
+      width: 70px;
+      height: 130px;
+      border: 2px solid lightblue;
+    }
+  }
+  .statistiOfAnimals {
+    margin-top: 20px;
+    // .statisticDiagram {
+    //   height: 150px;
+    //   width: 100%;
+    //   border: 1px solid black;
+    //   margin: auto;
+    //   margin-top: 20px;
+    //   margin-bottom: 20px;
+    // }
+    #curve_chart {
+      width: 100%;
+      height: 200px;
+      svg {
+        rect {
+          g:nth-child(1) {
+            g:nth-child(1) {
+            }
+          }
+        }
+      }
+    }
+  }
+  .listOfDonations {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    .donationsTableContainer {
+      p {
+        margin-top: 5px;
+      }
+    }
+    .singleMember {
+      padding: 10px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-gap: 20px;
+      .aboutMember {
+        // border-bottom: 1px solid black;
+        height: 35px;
+      }
+      .emailBox {
+        width: 150px;
+        p {
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
+      #moneyDonation,
+      #timeDonation,
+      #stuffDonation {
+        background-color: #b28973;
+        color: white;
+        height: 3px;
+        width: 0;
+        color: #b28973;
+        p {
+          white-space: nowrap;
+        }
+      }
+      &:nth-of-type(2n) {
+        background: $grayColor;
+      }
+    }
+  }
+}
+@media only screen and (min-width: $breakpoint-medium1) and (max-width: $breakpoint-medium2) {
+  /*-----------------------------
+        Signed in page 
+  -----------------------------*/
+
+  /* ----------------------
+        Forms
+-----------------------*/
+
+  #signedInContent,
+  #lastBox {
+    #sendToUsForms,
+    #frontpageForms {
+      grid-template-columns: 1fr 1fr;
+      #messageForm,
+      #signupForm,
+      #imageForm,
+      #donationForm,
+      #stuffDonationForm {
+        margin: 45px;
+        padding: 30px;
+        border-radius: 30px;
+
+        h2 {
+          font-size: 18px;
+          margin-top: 0px;
+        }
+        form {
+          button {
+            margin-top: 19px;
+            margin-bottom: 0px;
+          }
+        }
+        .formField {
+          margin-bottom: 0;
+          padding: 0;
+          input {
+            font-size: 0.8em;
+            margin: 19px 0px;
+            width: 100%;
+          }
+          label {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+
+  /*-----------------------------*/
+  /* Frontpage */
+  /*-----------------------------*/
+
+  #intro {
+    height: 95vh;
+
+    .introPic {
+      .dots {
+        position: relative;
+
+        div:nth-child(1) {
+          width: 40px;
+          top: 19vh;
+          right: 10vw;
+          height: 40px;
+        }
+        div:nth-child(2) {
+          width: 20px;
+          top: 30vh;
+          right: 8vw;
+          height: 20px;
+        }
+        div:nth-child(3) {
+          width: 15px;
+          top: 60vh;
+          right: 12vw;
+          height: 15px;
+        }
+        div:nth-child(4) {
+          width: 20px;
+          top: 20vh;
+          left: 5vw;
+          height: 20px;
+        }
+        // div:nth-child(1) {
+        //   width: 30px;
+        //   top: 18vh;
+        //   right: 20vw;
+        //   height: 30px;
+        // }
+        // div:nth-child(2) {
+        //   width: 15px;
+        //   top: 15vh;
+        //   right: 15vw;
+        //   height: 15px;
+        // }
+        // div:nth-child(3) {
+        //   width: 13px;
+        //   top: 30vh;
+        //   right: 20vw;
+        //   height: 13px;
+        // }
+        // div:nth-child(4) {
+        //   width: 15px;
+        //   top: 25vh;
+        //   left: 20vw;
+        //   height: 15px;
+        // }
+      }
+      .introCat {
+        top: 320px;
+        left: -10vw;
+        img {
+          width: 25vw;
+        }
+      }
+    }
+  }
+  #aboutUs {
+    display: block;
+    height: auto;
+    padding: 25px;
+
+    h1 {
+      font-size: 26px;
+      padding: 10px;
+    }
+    h2 {
+      font-size: 22px;
+      margin: 5px 0;
+      padding-top: 22px;
+    }
+    .aboutCont {
+      padding: 3vw;
+      padding-top: 0;
+      #walkDog,
+      #errandCar,
+      #coinCat {
+        width: 150px;
+        height: 150px;
+
+        svg {
+          width: 150px;
+        }
+      }
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+  #lastBox {
+    display: grid;
+    margin: auto;
+
+    h2 {
+      text-align: center;
+      align-self: end;
+      margin: 20px 0;
+    }
+    #animalImage {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      div {
+        margin: 20px 0;
+        justify-self: center;
+
+        img {
+          width: 95px;
+        }
+      }
+    }
+  }
+
+  #footer {
+    .contactBox {
+      h3 {
+        font-size: 16px;
+      }
+      p {
+        font-size: 14.5px;
+      }
+      svg {
+        width: 50px;
+        height: 50px;
+      }
+    }
+    #subscribeForm {
+      h3 {
+        font-size: 16px;
+      }
+      label {
+        font-size: 13px;
+      }
+    }
+  }
+}
+@media (max-width: 1100px) {
+  #signedInContent {
+    #yourPets {
+      #animalBox {
+        #animalViewBox {
+          width: 696px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 850px) {
+  #signedInContent {
+    #yourPets {
+      #animalBox {
+        #animalViewBox {
+          width: 522px;
+        }
+      }
+    }
+    #petExpand {
+      grid-row-gap: 30px;
+      grid-template-columns: 1fr;
+      .bigAnimalImage {
+        justify-self: center;
+      }
+    }
+  }
+}
+
+@media (max-width: 660px) {
+  #signedInContent {
+    #yourPets {
+      #animalBox {
+        #animalViewBox {
+          width: 348px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-medium1) {
+  /*----------------------------*/
+  /*   Forms                    */
+  /*----------------------------*/
+
+  #sendToUsForms,
+  #frontpageForms {
+    grid-template-columns: 1fr;
+    #messageForm,
+    #imageForm,
+    #signupForm,
+    #donationForm,
+    #stuffDonationForm {
+      margin: 50px;
+      padding: 40px;
+      border-radius: h2 {
+        font-size: 20px;
+        margin-top: 0px;
+      }
+      form {
+        button {
+          margin-top: 19px;
+          margin-bottom: 0px;
+        }
+      }
+      .formField {
+        margin-bottom: 0;
+        padding: 0;
+        input {
+          font-size: 0.8em;
+          margin: 19px 0px;
+          width: 100%;
+        }
+        label {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+
+  /*----------------------------*/
+  /*   Frontpage                */
+  /*----------------------------*/
+
+  #intro {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding-top: 100px;
+    height: auto;
+
+    .introText {
+      width: 90vw;
+
+      .catchphrase {
+        text-align: center;
+        h1 {
+          padding-top: 30px;
+          font-size: 8vw;
+          span {
+            font-size: 12vw;
+          }
+        }
+      }
+      p {
+        text-align: center;
+        padding-bottom: 45px;
+      }
+    }
+    .introPic {
+      grid-row-start: 1;
+      height: 250px;
+      width: 100%;
+      .circle {
+        position: relative;
+        margin: auto;
+
+        img {
+          width: 250px;
+          height: auto;
+          margin: auto;
+        }
+      }
+      .introCat {
+        top: 130px;
+        left: 10vw;
+        img {
+          width: 30vw;
+        }
+      }
+      .dots {
+        div:nth-child(1) {
+          width: 30px;
+          top: 6vh;
+          right: 17vw;
+          height: 30px;
+        }
+        div:nth-child(2) {
+          width: 15px;
+          top: 15vh;
+          right: 15vw;
+          height: 15px;
+        }
+        div:nth-child(3) {
+          width: 13px;
+          top: 30vh;
+          right: 19vw;
+          height: 13px;
+        }
+        div:nth-child(4) {
+          width: 15px;
+          top: 20vh;
+          left: 20vw;
+          height: 15px;
+        }
+      }
+    }
+  }
+  #aboutUs {
+    display: block;
+    height: auto;
+
+    h1 {
+      font-size: 26px;
+      padding-top: 10px;
+    }
+    h2 {
+      font-size: 22px;
+      margin: 5px 0;
+      padding-top: 22px;
+    }
+    .aboutCont {
+      display: block;
+      margin: auto;
+      padding: 5vw;
+      padding-top: 0;
+      #walkDog,
+      #errandCar,
+      #coinCat {
+        width: 170px;
+        height: 170px;
+
+        svg {
+          width: 170px;
+        }
+      }
+    }
+    p {
+      font-size: 15px;
+    }
+  }
+  #lastBox {
+    display: grid;
+    margin: auto;
+
+    h2 {
+      text-align: center;
+      align-self: end;
+      margin: 20px 0;
+    }
+    #animalImage {
+      padding: 0px 5px;
+      padding-top: 5px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      div {
+        margin: 20px 0;
+        justify-self: center;
+
+        img {
+          width: 80px;
+        }
+      }
+    }
+  }
+
+  // here comes the footer
+  #footer {
+    padding: 30px;
+    padding-left: 95px;
+    padding-right: 95px;
+    grid-template-columns: 1fr;
+
+    #subscribeForm {
+      grid-row-start: 1;
+      h3 {
+        margin-bottom: 10px;
+        font-size: 17px;
+      }
+      input {
+        width: 90%;
+      }
+      label {
+        font-size: 15px;
+      }
+      button {
+        height: 40px;
+        margin-right: 30px;
+      }
+    }
+
+    .contactBox {
+      grid-gap: 5px;
+      padding-top: 15px;
+      h3 {
+        margin-bottom: 10px;
+        font-size: 17px;
+      }
+      p {
+        font-size: 16px;
+      }
+      svg {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+}
+
+/* ----------------------
+      Mobile version
+-----------------------*/
+
+@media (max-width: $breakpoint-mobile) {
+  /* ----------------------
+        Signed in page
+-----------------------*/
+#loginForm{
+  width: 62vw;
+}
+
+  #signedInContent {
+    #userSettings,
+    #newsFeed {
+      width: 100vw;
+      padding: 50px;
+      padding-bottom: 100px;
+
+      h2 {
+        font-size: 1.4em;
+      }
+      .user {
+        p {
+          font-size: 1.2em;
+        }
+        img {
+          width: 50px;
+        }
+      }
+    }
+    #yourPets {
+      #animalBox {
+        #animalViewBox {
+          width: 174px;
+        }
+      }
+    }
+  }
+
+  #newsBtn,
+  #settingBtn {
+    display: none;
+  }
+
+  #mobileMenu {
+    background-color: white;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77);
+    position: fixed;
+    bottom: 0%;
+    width: 100%;
+    height: 60px;
+
+    svg {
+      width: 25px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    div {
+      justify-self: center;
+      align-self: center;
+    }
+  }
+  #signedInContent {
+    #yourPets {
+      #animalList {
+        grid-template-columns: 1fr;
+        align-self: center;
+        justify-self: center;
+
+        .eachAnimal {
+          width: 200px;
+          height: 200px;
+          margin: 20px;
+        }
+      }
+    }
+  }
+
+  /* ----------------------
+        Forms
+-----------------------*/
+
+  #signedInContent,
+  #frontpageForms {
+    #sendToUsForms {
+      padding: 10vw;
+      width: 100%;
+      grid-template-columns: 1fr;
+      #stuffDonationForm,
+      #messageForm,
+      #signupForm,
+      #imageForm,
+      #donationForm {
+        margin: 34px;
+        padding: 30px;
+
+        h2 {
+          font-size: 20px;
+          margin-top: 0px;
+        }
+        form {
+          button {
+            margin-top: 19px;
+            margin-bottom: 0px;
+          }
+        }
+        .formField {
+          margin-bottom: 0;
+          padding: 0;
+          input {
+            font-size: 0.7em;
+            margin: 19px 0px;
+            width: 100%;
+          }
+          label {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
+
+  #preferencesModal {
+    .modalContent {
+      #modalTop {
+        display: grid;
+        grid-template-columns: 1fr;
+        h1 {
+          padding: 40px 5vw 0 5vw;
+        }
+        span {
+          padding: 0 5vw 40px 5vw;
+        }
+      }
+    }
+  }
+  /* ----------------------
+        Frontpage
+-----------------------*/
+
+  #intro {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding-top: 100px;
+
+    .introText {
+      width: 90vw;
+      .catchphrase {
+        text-align: center;
+        h1 {
+          font-size: 10vw;
+          span {
+            font-size: 15vw;
+          }
+        }
+      }
+      p {
+        text-align: center;
+        padding-bottom: 22px;
+      }
+    }
+    .introPic {
+      grid-row-start: 1;
+      height: 200px;
+      width: 100%;
+      .circle {
+        position: relative;
+        margin: auto;
+
+        img {
+          width: 250px;
+          height: auto;
+          margin: auto;
+        }
+      }
+      .introCat {
+        top: 152px;
+        left: 4vw;
+        img {
+          width: 40vw;
+        }
+      }
+      .dots {
+        position: relative;
+
+        div:nth-child(1) {
+          width: 30px;
+          top: 6vh;
+          right: 10vw;
+          height: 30px;
+        }
+        div:nth-child(2) {
+          width: 15px;
+          top: 15vh;
+          right: 8vw;
+          height: 15px;
+        }
+        div:nth-child(3) {
+          width: 13px;
+          top: 30vh;
+          right: 12vw;
+          height: 13px;
+        }
+        div:nth-child(4) {
+          width: 15px;
+          top: 20vh;
+          left: 2vw;
+          height: 15px;
+        }
+      }
+    }
+  }
+  #aboutUs {
+    display: block;
+    height: auto;
+
+    h1 {
+      font-size: 24px;
+      padding-top: 10px;
+    }
+    h2 {
+      font-size: 20px;
+      margin: 5px 0;
+      padding-top: 22px;
+    }
+    .aboutCont {
+      display: block;
+      margin: auto;
+      padding: 5vw;
+      padding-top: 0;
+      #walkDog,
+      #errandCar,
+      #coinCat {
+        width: 150px;
+        height: 150px;
+
+        svg {
+          width: 150px;
+        }
+      }
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  #lastBox {
+    color: white;
+    display: grid;
+    h2 {
+      text-align: center;
+      align-self: end;
+      margin: 20px 0;
+    }
+    #animalImage {
+      padding: 0px 5px;
+      padding-top: 5px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      div {
+        margin: 20px 0;
+        justify-self: center;
+
+        img {
+          width: 70px;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  // here comes the footer
+  #footer {
+    padding: 30px 30px 100px 30px;
+    grid-template-columns: 1fr;
+
+    #subscribeForm {
+      grid-row-start: 1;
+      h3 {
+        margin-bottom: 10px;
+        font-size: 15px;
+      }
+      label {
+        font-size: 13px;
+      }
+      button {
+        height: 30px;
+      }
+    }
+
+    .contactBox {
+      padding-top: 15px;
+      h3 {
+        margin-bottom: 10px;
+        margin-top: 10px;
+        font-size: 15px;
+      }
+      p {
+        font-size: 14px;
+      }
+      svg {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  }
+}
