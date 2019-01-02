@@ -1,0 +1,2425 @@
+/* ----------------------
+       main things
+-----------------------*/
+@import url("https://fonts.googleapis.com/css?family=Raleway");
+@import url("../font/axis-extrabold.otf");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth; }
+
+body::-webkit-scrollbar,
+main::-webkit-scrollbar,
+#animalList::-webkit-scrollbar,
+#animalViewBox::-webkit-scrollbar {
+  display: none; }
+
+body {
+  font-family: "Raleway", sans-serif; }
+
+#addPetForm {
+  background-color: lightblue; }
+
+/* -----------------------
+        Navbar 
+------------------------*/
+.navbar {
+  position: fixed;
+  z-index: 20;
+  height: 60px;
+  background-color: white;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77); }
+  .navbar img {
+    width: 150px;
+    padding: 18px;
+    fill: #818181;
+    align-self: center; }
+  .navbar #sidebarBtns {
+    display: none;
+    justify-self: end; }
+    .navbar #sidebarBtns img {
+      width: 65px;
+      padding: 13px; }
+    .navbar #sidebarBtns #newsBtn {
+      margin-right: 10px; }
+    .navbar #sidebarBtns #newsBtn,
+    .navbar #sidebarBtns #settingBtn {
+      cursor: pointer; }
+  .navbar .darkBtn {
+    font-size: 13px;
+    padding: 9px;
+    justify-self: end;
+    align-self: center;
+    margin-right: 10px; }
+    .navbar .darkBtn :hover {
+      background-color: #599686; }
+    .navbar .darkBtn a {
+      padding: 7px;
+      background-color: #74b7a5;
+      border-radius: 40px;
+      text-decoration: none;
+      color: #ffffff; }
+    .navbar .darkBtn#signoutAdmin a {
+      background-color: white;
+      color: #2e2f4b; }
+  .navbar #signoutAdmin {
+    display: none; }
+
+/*------------------------------
+Forms
+------------------------------*/
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none; }
+
+#loginForm {
+  background-color: white;
+  display: none;
+  position: fixed;
+  z-index: 10;
+  right: 0;
+  top: 60px;
+  box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77); }
+  #loginForm form {
+    width: 22vw; }
+    #loginForm form .formField input {
+      border-bottom: 1px solid grey;
+      width: 100%; }
+
+#donationForm,
+#signupForm {
+  background-color: #ded2c3;
+  border-radius: 30px;
+  color: white; }
+  #donationForm form .formField input,
+  #signupForm form .formField input {
+    border-bottom: 1px solid grey;
+    width: 100%; }
+
+#messageForm,
+#imageForm,
+#stuffDonationForm {
+  background-color: white; }
+
+#loginForm,
+#messageForm,
+#imageForm,
+#stuffDonationForm {
+  padding: 40px;
+  color: grey; }
+  #loginForm h2,
+  #messageForm h2,
+  #imageForm h2,
+  #stuffDonationForm h2 {
+    margin-bottom: 20px; }
+  #loginForm #wrongPassword,
+  #messageForm #wrongPassword,
+  #imageForm #wrongPassword,
+  #stuffDonationForm #wrongPassword {
+    display: none; }
+  #loginForm form,
+  #messageForm form,
+  #imageForm form,
+  #stuffDonationForm form {
+    display: grid; }
+    #loginForm form .formField,
+    #messageForm form .formField,
+    #imageForm form .formField,
+    #stuffDonationForm form .formField {
+      display: flex;
+      flex-flow: column-reverse;
+      margin-bottom: 1em; }
+      #loginForm form .formField input,
+      #messageForm form .formField input,
+      #imageForm form .formField input,
+      #stuffDonationForm form .formField input {
+        width: 100%;
+        background: none;
+        font-size: 1em;
+        border: 0;
+        border-bottom: 1px solid grey;
+        font-family: inherit;
+        -webkit-appearance: none;
+        border-radius: 0;
+        padding: 0;
+        cursor: text; }
+        #loginForm form .formField input:focus,
+        #messageForm form .formField input:focus,
+        #imageForm form .formField input:focus,
+        #stuffDonationForm form .formField input:focus {
+          outline: 0;
+          border-bottom: 1px solid #599686; }
+      #loginForm form .formField input:placeholder-shown + label,
+      #messageForm form .formField input:placeholder-shown + label,
+      #imageForm form .formField input:placeholder-shown + label,
+      #stuffDonationForm form .formField input:placeholder-shown + label {
+        cursor: text;
+        max-width: 66.66%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform-origin: left bottom;
+        transform: translate(0, 2.125rem) scale(1.2); }
+      #loginForm form .formField ::-webkit-input-placeholder,
+      #messageForm form .formField ::-webkit-input-placeholder,
+      #imageForm form .formField ::-webkit-input-placeholder,
+      #stuffDonationForm form .formField ::-webkit-input-placeholder {
+        opacity: 0;
+        transition: inherit; }
+      #loginForm form .formField input:not(:placeholder-shown) + label,
+      #loginForm form .formField input:focus + label,
+      #messageForm form .formField input:not(:placeholder-shown) + label,
+      #messageForm form .formField input:focus + label,
+      #imageForm form .formField input:not(:placeholder-shown) + label,
+      #imageForm form .formField input:focus + label,
+      #stuffDonationForm form .formField input:not(:placeholder-shown) + label,
+      #stuffDonationForm form .formField input:focus + label {
+        transition: 0.2s ease all;
+        transform: translate(0, 0) scale(1);
+        cursor: pointer; }
+      #loginForm form .formField input,
+      #loginForm form .formField label,
+      #messageForm form .formField input,
+      #messageForm form .formField label,
+      #imageForm form .formField input,
+      #imageForm form .formField label,
+      #stuffDonationForm form .formField input,
+      #stuffDonationForm form .formField label {
+        touch-action: manipulation; }
+    #loginForm form button,
+    #messageForm form button,
+    #imageForm form button,
+    #stuffDonationForm form button {
+      font-family: "Raleway", sans-serif;
+      height: 40px;
+      justify-self: end;
+      padding: 7px;
+      width: 150px;
+      background-color: #74b7a5;
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 40px;
+      cursor: pointer;
+      align-self: end; }
+      #loginForm form button:hover,
+      #messageForm form button:hover,
+      #imageForm form button:hover,
+      #stuffDonationForm form button:hover {
+        background-color: #599686; }
+    #loginForm form input,
+    #loginForm form button,
+    #messageForm form input,
+    #messageForm form button,
+    #imageForm form input,
+    #imageForm form button,
+    #stuffDonationForm form input,
+    #stuffDonationForm form button {
+      margin: 20px 0; }
+
+#donationForm,
+#signupForm {
+  padding: 40px; }
+  #donationForm h2,
+  #signupForm h2 {
+    margin-bottom: 20px; }
+  #donationForm form,
+  #signupForm form {
+    display: grid; }
+    #donationForm form .pickUpBox input,
+    #signupForm form .pickUpBox input {
+      border: none;
+      background-image: none;
+      background-color: transparent;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      border-bottom: 1px solid #b28973;
+      font-family: inherit; }
+    #donationForm form .formField,
+    #signupForm form .formField {
+      display: flex;
+      flex-flow: column-reverse;
+      margin-bottom: 1em; }
+      #donationForm form .formField input,
+      #signupForm form .formField input {
+        width: 100%;
+        background: none;
+        font-size: 1em;
+        border: 0;
+        border-bottom: 1px solid #b28973;
+        font-family: inherit;
+        -webkit-appearance: none;
+        border-radius: 0;
+        padding: 0;
+        cursor: text; }
+        #donationForm form .formField input:focus,
+        #signupForm form .formField input:focus {
+          outline: 0;
+          border-bottom: 1px solid #b28973; }
+      #donationForm form .formField input:placeholder-shown + label,
+      #signupForm form .formField input:placeholder-shown + label {
+        cursor: text;
+        color: #b28973;
+        max-width: 66.66%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform-origin: left bottom;
+        transform: translate(0, 2.125rem) scale(1.2); }
+      #donationForm form .formField ::-webkit-input-placeholder,
+      #signupForm form .formField ::-webkit-input-placeholder {
+        opacity: 0;
+        transition: inherit; }
+      #donationForm form .formField input:not(:placeholder-shown) + label,
+      #donationForm form .formField input:focus + label,
+      #signupForm form .formField input:not(:placeholder-shown) + label,
+      #signupForm form .formField input:focus + label {
+        transition: 0.2s ease all;
+        transform: translate(0, 0) scale(1);
+        cursor: pointer; }
+      #donationForm form .formField input,
+      #donationForm form .formField label,
+      #signupForm form .formField input,
+      #signupForm form .formField label {
+        color: #b28973;
+        touch-action: manipulation; }
+    #donationForm form button,
+    #signupForm form button {
+      font-family: "Raleway", sans-serif;
+      height: 40px;
+      justify-self: end;
+      padding: 7px;
+      width: 150px;
+      background-color: #b28973;
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 40px;
+      cursor: pointer;
+      align-self: end; }
+      #donationForm form button:hover,
+      #signupForm form button:hover {
+        background-color: #916a56; }
+    #donationForm form input,
+    #signupForm form input {
+      margin: 20px 0; }
+    #donationForm form button,
+    #signupForm form button {
+      margin-top: 40px;
+      margin-bottom: 0px; }
+
+#subscribeForm form {
+  display: grid; }
+  #subscribeForm form .formField {
+    display: flex;
+    flex-flow: column-reverse;
+    margin-bottom: 1.5em; }
+    #subscribeForm form .formField input {
+      width: 100%;
+      color: #ffffff;
+      background-color: rgba(0, 0, 0, 0);
+      font-size: 1em;
+      border: 0;
+      border-bottom: 1px solid white;
+      font-family: inherit;
+      -webkit-appearance: none;
+      border-radius: 0;
+      padding: 0;
+      cursor: text; }
+      #subscribeForm form .formField input:focus {
+        outline: 0;
+        transition: 0.2s ease all;
+        border-bottom: 2px solid white; }
+    #subscribeForm form .formField input:placeholder-shown + label {
+      cursor: text;
+      max-width: 66.66%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transform-origin: left bottom;
+      transform: translate(0, 1.1rem) scale(1.2); }
+    #subscribeForm form .formField ::-webkit-input-placeholder {
+      opacity: 0;
+      transition: inherit; }
+    #subscribeForm form .formField input:not(:placeholder-shown) + label,
+    #subscribeForm form .formField input:focus + label {
+      transition: 0.2s ease all;
+      transform: translate(0, 0) scale(1);
+      cursor: pointer; }
+    #subscribeForm form .formField input,
+    #subscribeForm form .formField label {
+      touch-action: manipulation; }
+  #subscribeForm form button {
+    font-family: "Raleway", sans-serif;
+    height: 40px;
+    justify-self: end;
+    padding: 7px;
+    width: 150px;
+    background-color: #759189;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 40px;
+    cursor: pointer;
+    align-self: end; }
+    #subscribeForm form button:hover {
+      background-color: #637e76; }
+
+.sendImageUser {
+  height: 40px;
+  color: white;
+  margin-top: 30px;
+  padding-bottom: 30px; }
+  .sendImageUser input {
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute; }
+  .sendImageUser label {
+    cursor: pointer;
+    color: #808080; }
+
+/* -----------------------
+        Frontpage 
+------------------------*/
+#intro {
+  padding-top: 60px;
+  background-color: #ead8a6;
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr; }
+  #intro .introText {
+    padding-left: 10vw;
+    width: 42vw;
+    align-self: center; }
+    #intro .introText .catchphrase {
+      justify-self: center;
+      padding-bottom: 30px; }
+      #intro .introText .catchphrase h1 {
+        font-family: "axis-extrabold", sans-serif;
+        line-height: 1;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 6vw; }
+        #intro .introText .catchphrase h1 span {
+          font-size: 8.5vw; }
+          #intro .introText .catchphrase h1 span::before {
+            content: "\A";
+            white-space: pre; }
+    #intro .introText p {
+      color: #c18e63; }
+  #intro .introPic {
+    display: grid;
+    position: relative; }
+    #intro .introPic .dots {
+      position: relative; }
+      #intro .introPic .dots div:nth-child(1) {
+        width: 40px;
+        top: 16vh;
+        right: 10vw;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.6);
+        position: absolute;
+        border-radius: 70% 37% 40% 46% / 45% 48% 50% 45%; }
+      #intro .introPic .dots div:nth-child(2) {
+        width: 20px;
+        top: 25vh;
+        right: 8vw;
+        height: 20px;
+        background-color: rgba(255, 255, 255, 0.7);
+        position: absolute;
+        border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%; }
+      #intro .introPic .dots div:nth-child(3) {
+        width: 15px;
+        top: 70vh;
+        right: 12vw;
+        height: 15px;
+        background-color: rgba(255, 255, 255, 0.7);
+        position: absolute;
+        border-radius: 27% 37% 54% 46% / 55% 48% 52% 45%; }
+      #intro .introPic .dots div:nth-child(4) {
+        width: 20px;
+        top: 20vh;
+        left: 2vw;
+        height: 20px;
+        background-color: rgba(255, 255, 255, 0.7);
+        position: absolute;
+        border-radius: 46% 50% 54% 46% / 55% 30% 52% 45%; }
+    #intro .introPic .circle {
+      position: absolute;
+      align-self: center; }
+      #intro .introPic .circle img {
+        width: 40vw;
+        background-color: rgba(255, 255, 255, 0.7);
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        animation: morph 15s ease-in-out infinite both alternate; }
+    #intro .introPic .introCat {
+      position: absolute;
+      align-self: center;
+      top: 400px;
+      left: -7vw; }
+      #intro .introPic .introCat img {
+        width: 23vw; }
+    #intro .introPic .introDog {
+      position: absolute;
+      align-self: center;
+      top: 238px;
+      left: 14vw; }
+      #intro .introPic .introDog img {
+        width: 31vw; }
+
+.fullsize {
+  width: 100%;
+  height: 100vh; }
+
+#aboutUs {
+  display: grid;
+  align-self: center;
+  background-color: #efefef;
+  color: #aeaeae;
+  text-align: center;
+  padding: 10vw; }
+  #aboutUs #walkDog,
+  #aboutUs #errandCar,
+  #aboutUs #coinCat {
+    background-color: #ffffff;
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    display: grid;
+    margin: 20px auto; }
+    #aboutUs #walkDog svg,
+    #aboutUs #errandCar svg,
+    #aboutUs #coinCat svg {
+      width: 180px;
+      place-self: center; }
+  #aboutUs #walkDog {
+    height: 200px;
+    width: 200px;
+    display: grid;
+    margin: 20px auto; }
+    #aboutUs #walkDog #dogEyes {
+      animation: eyeBlink 5s infinite;
+      transform-origin: 50% 40%; }
+    #aboutUs #walkDog #dogTail {
+      animation: moveTail 2s infinite;
+      transform-origin: bottom left; }
+  #aboutUs #errandCar #leftwheel {
+    animation: rotateWheel 0.6s infinite linear reverse;
+    transform-origin: 20.2% 74.7%; }
+  #aboutUs #errandCar #rightwheel {
+    animation: rotateWheel 0.6s infinite linear reverse;
+    transform-origin: 74.7% 74.5%; }
+  #aboutUs #errandCar #car {
+    animation: carBounce 1s infinite alternate-reverse ease-in-out; }
+  #aboutUs #errandCar #box3,
+  #aboutUs #errandCar #box1 {
+    animation: boxSideBounce 1s infinite alternate-reverse ease-in-out; }
+  #aboutUs #errandCar #box2 {
+    animation: boxMiddleBounce 1s infinite alternate-reverse ease-in-out; }
+  #aboutUs #errandCar #cattree {
+    animation: catTreeBounce 1s infinite alternate-reverse ease-in-out; }
+    #aboutUs #errandCar #cattree #ball {
+      animation: ballSwing 1s infinite alternate-reverse ease-in-out;
+      transform-origin: 76.3% 19%; }
+  #aboutUs #coinCat #catHead {
+    animation: moveHead 2s 0.5s infinite;
+    transform-origin: 50%; }
+  #aboutUs #coinCat #coin {
+    animation: coinFall 2s ease-in-out infinite; }
+  #aboutUs #coinCat #catEyes {
+    animation: moveHead 2s 0.5s infinite;
+    transform-origin: 50%; }
+  #aboutUs h1 {
+    align-self: center; }
+  #aboutUs .aboutCont {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 70px; }
+    #aboutUs .aboutCont h2 {
+      margin: 20px 0; }
+    #aboutUs .aboutCont .aboutImg {
+      background-color: #ffffff;
+      border-radius: 50%;
+      height: 200px;
+      width: 200px;
+      display: grid;
+      margin: 20px auto; }
+      #aboutUs .aboutCont .aboutImg img {
+        height: 175px;
+        align-self: center; }
+
+#lastBox {
+  color: white;
+  display: grid; }
+  #lastBox h2 {
+    text-align: center;
+    align-self: end;
+    margin: 20px 0; }
+  #lastBox #animalImage {
+    padding: 20px 10vw;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); }
+    #lastBox #animalImage div {
+      margin: 20px 0;
+      justify-self: center; }
+      #lastBox #animalImage div img {
+        width: 8vw;
+        border-radius: 50%; }
+
+#sendToUsForms {
+  background-color: #ead8a6; }
+
+#frontpageForms,
+#sendToUsForms {
+  display: grid;
+  grid-template-columns: 1fr 1fr; }
+  #frontpageForms #messageForm,
+  #frontpageForms #imageForm,
+  #frontpageForms #stuffDonationForm,
+  #sendToUsForms #messageForm,
+  #sendToUsForms #imageForm,
+  #sendToUsForms #stuffDonationForm {
+    border-radius: 30px;
+    display: grid;
+    margin: 5vw 0 10vw 0;
+    padding: 40px;
+    border-radius: 30px; }
+  #frontpageForms #donationForm,
+  #frontpageForms #signupForm,
+  #sendToUsForms #donationForm,
+  #sendToUsForms #signupForm {
+    margin: 3vw 10vw 10vw 10vw;
+    padding: 40px;
+    border-radius: 30px; }
+
+#sendToUsForms {
+  padding: 0 10vw;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 4vw; }
+
+#frontpageForms #donationForm label {
+  color: #b28973; }
+
+#frontpageForms #donationForm h2 {
+  margin-bottom: 0px; }
+
+#frontpageForms #donationForm p {
+  text-align: center;
+  margin-bottom: 6px; }
+
+#frontpageForms #donationForm div.formField {
+  margin-bottom: 0px; }
+  #frontpageForms #donationForm div.formField input,
+  #frontpageForms #donationForm div.formField #donateWhat {
+    margin-bottom: 0px;
+    margin-top: 15px;
+    width: 100%; }
+  #frontpageForms #donationForm div.formField .whoswName {
+    font-size: 14px; }
+  #frontpageForms #donationForm div.formField form button {
+    margin-top: 50px;
+    margin-bottom: 0px; }
+
+#frontpageForms #signupForm label.formLabel {
+  color: #b28973; }
+
+/* -----------------------
+        signed in page
+------------------------*/
+#mobileMenu {
+  display: none; }
+
+#signedInContent #aboutLoggedIn {
+  width: 100%;
+  color: #c18e63;
+  padding: 5vw 10vw 0 10vw;
+  background-color: #ead8a6; }
+  #signedInContent #aboutLoggedIn h2 {
+    padding-bottom: 20px; }
+
+#signedInContent #yourPets {
+  padding: 150px 10vw 0 10vw;
+  background-color: #efefef;
+  color: grey;
+  position: relative; }
+  #signedInContent #yourPets hr {
+    position: relative;
+    top: -60px;
+    opacity: 0; }
+  #signedInContent #yourPets #petChoices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr; }
+    #signedInContent #yourPets #petChoices div {
+      align-self: end; }
+      #signedInContent #yourPets #petChoices div input,
+      #signedInContent #yourPets #petChoices div label {
+        margin: 20px 0; }
+    #signedInContent #yourPets #petChoices p {
+      align-self: end;
+      justify-self: end;
+      margin: 20px 0; }
+  #signedInContent #yourPets #animalBox {
+    display: grid;
+    grid-template-columns: 15px 1fr 15px; }
+    #signedInContent #yourPets #animalBox .animalArrows {
+      align-self: center; }
+    #signedInContent #yourPets #animalBox i {
+      border: solid #948a92;
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      padding: 3px;
+      cursor: pointer; }
+    #signedInContent #yourPets #animalBox .right {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg); }
+    #signedInContent #yourPets #animalBox .left {
+      transform: rotate(135deg);
+      -webkit-transform: rotate(135deg); }
+    #signedInContent #yourPets #animalBox #animalViewBox {
+      height: 250px;
+      width: 870px;
+      overflow: scroll;
+      white-space: nowrap;
+      justify-self: center; }
+      #signedInContent #yourPets #animalBox #animalViewBox #animalList {
+        position: relative; }
+        #signedInContent #yourPets #animalBox #animalViewBox #animalList .eachAnimal {
+          margin: 12px;
+          display: inline-block;
+          width: 150px;
+          height: 150px;
+          border-radius: 50%;
+          position: relative;
+          cursor: pointer; }
+          #signedInContent #yourPets #animalBox #animalViewBox #animalList .eachAnimal > * {
+            position: absolute; }
+          #signedInContent #yourPets #animalBox #animalViewBox #animalList .eachAnimal > p {
+            width: 100%;
+            text-align: center;
+            bottom: -15%; }
+          #signedInContent #yourPets #animalBox #animalViewBox #animalList .eachAnimal > img:not(.heart) {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%; }
+          #signedInContent #yourPets #animalBox #animalViewBox #animalList .eachAnimal .heart {
+            width: 15%;
+            left: 10%;
+            bottom: -15%; }
+          #signedInContent #yourPets #animalBox #animalViewBox #animalList .eachAnimal .statusCircle {
+            width: 10px;
+            height: 10px;
+            right: 10%;
+            top: 10%;
+            box-shadow: 3px 1px 17px 3px rgba(255, 255, 255, 0.83);
+            background-color: #a81c1c;
+            border-radius: 50%; }
+          #signedInContent #yourPets #animalBox #animalViewBox #animalList .eachAnimal * {
+            pointer-events: none; }
+
+#signedInContent .triangleUp {
+  display: none;
+  position: absolute;
+  left: 50px;
+  bottom: -88px;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 20px solid white; }
+
+#signedInContent #petExpand {
+  color: #716f6f;
+  width: 100%;
+  height: auto;
+  padding: 60px 50px;
+  background-color: white;
+  grid-column: 1/-1;
+  z-index: 2;
+  display: none;
+  grid-template-columns: 0.6fr 1.2fr 1.2fr;
+  grid-template-rows: auto auto;
+  grid-column-gap: 35px;
+  position: relative; }
+  #signedInContent #petExpand .bigAnimalImage {
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #74b7a5; }
+  #signedInContent #petExpand .bigAnimalInfo .bigAnimalBasicInfo {
+    padding-bottom: 16px; }
+    #signedInContent #petExpand .bigAnimalInfo .bigAnimalBasicInfo p {
+      padding-bottom: 0;
+      font-weight: bold; }
+      #signedInContent #petExpand .bigAnimalInfo .bigAnimalBasicInfo p span {
+        font-weight: normal; }
+    #signedInContent #petExpand .bigAnimalInfo .bigAnimalBasicInfo .needs {
+      font-weight: normal; }
+  #signedInContent #petExpand .bigAnimalInfo .bigAnimalStory p {
+    font-weight: bold; }
+  #signedInContent #petExpand .bigAnimalInfo .bigAnimalStory .animalStory {
+    line-height: 1.6;
+    font-weight: normal; }
+  #signedInContent #petExpand .memberDonation *.crossout {
+    text-decoration: line-through; }
+  #signedInContent #petExpand .memberDonation #donationFormLogginIn {
+    display: grid;
+    height: 100%; }
+    #signedInContent #petExpand .memberDonation #donationFormLogginIn h3 {
+      padding: 10px; }
+    #signedInContent #petExpand .memberDonation #donationFormLogginIn #donationBtn {
+      font-size: 13px;
+      font-family: "Raleway", sans-serif;
+      height: 40px;
+      justify-self: end;
+      padding: 7px;
+      margin: 11px 0;
+      width: 150px;
+      background-color: #74b7a5;
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 40px;
+      cursor: pointer;
+      align-self: end; }
+      #signedInContent #petExpand .memberDonation #donationFormLogginIn #donationBtn:hover {
+        background-color: #599686; }
+  #signedInContent #petExpand .closeExpandBtn {
+    cursor: pointer;
+    position: absolute;
+    font-size: 40px;
+    right: 30px;
+    top: 20px;
+    font-size: 40px; }
+  #signedInContent #petExpand .donateBtn {
+    cursor: pointer;
+    position: absolute;
+    right: 50px;
+    top: 50px; }
+  #signedInContent #petExpand h2 {
+    text-align: left;
+    padding: 10px; }
+  #signedInContent #petExpand ul {
+    list-style: none;
+    padding: 10px; }
+    #signedInContent #petExpand ul li {
+      text-decoration: none;
+      padding: 0;
+      text-align: left; }
+  #signedInContent #petExpand p {
+    text-align: left;
+    padding: 10px; }
+  #signedInContent #petExpand .expandImg {
+    width: 20vw;
+    align-self: center; }
+    #signedInContent #petExpand .expandImg img {
+      border-radius: 50%;
+      width: 20vw; }
+
+#signedInContent #sendToUsForms {
+  background-color: #ead8a6; }
+
+#signedInContent #userSettings #donationStatus p {
+  padding: 5px 0px; }
+  #signedInContent #userSettings #donationStatus p img {
+    position: relative;
+    width: 20px;
+    top: 5px; }
+
+#signedInContent #userSettings #donationStatus #signOut {
+  margin: 20px 0; }
+
+#signedInContent #userSettings #currentSettings h5 {
+  margin-top: 10px;
+  font-weight: bold; }
+
+#signedInContent #userSettings #currentSettings #updatePrefBtn {
+  margin: 20px 0; }
+
+#signedInContent #userSettings #currentSettings #montlyDonationMember input {
+  width: 95%; }
+
+#signedInContent #newsFeed p {
+  padding: 20px 0;
+  border-bottom: 1px solid #eaeaea; }
+
+#signedInContent #userSettings,
+#signedInContent #newsFeed {
+  color: #717070;
+  display: none;
+  box-shadow: 3px 1px 17px 3px rgba(155, 155, 155, 0.68);
+  z-index: 3;
+  height: calc(100vh - 60px);
+  overflow: scroll;
+  background-color: white;
+  position: fixed;
+  right: 0;
+  top: 60px;
+  width: 280px;
+  padding: 20px; }
+  #signedInContent #userSettings h2,
+  #signedInContent #newsFeed h2 {
+    padding-bottom: 10px;
+    font-weight: 100;
+    font-size: 1.3em; }
+  #signedInContent #userSettings h3,
+  #signedInContent #userSettings h5,
+  #signedInContent #newsFeed h3,
+  #signedInContent #newsFeed h5 {
+    padding: 10px 0px;
+    font-weight: 300; }
+  #signedInContent #userSettings h5,
+  #signedInContent #newsFeed h5 {
+    font-size: 1em; }
+  #signedInContent #userSettings div,
+  #signedInContent #newsFeed div {
+    padding: 5px 0px; }
+    #signedInContent #userSettings div label,
+    #signedInContent #newsFeed div label {
+      font-size: 0.8em; }
+      #signedInContent #userSettings div label input[type="checkbox"],
+      #signedInContent #newsFeed div label input[type="checkbox"] {
+        margin-right: 10px; }
+  #signedInContent #userSettings hr,
+  #signedInContent #newsFeed hr {
+    margin-bottom: 10px; }
+  #signedInContent #userSettings .user,
+  #signedInContent #newsFeed .user {
+    display: grid;
+    grid-template-columns: 1fr 6vw; }
+    #signedInContent #userSettings .user img,
+    #signedInContent #newsFeed .user img {
+      place-self: center;
+      width: 4vw;
+      border-radius: 50%; }
+    #signedInContent #userSettings .user p,
+    #signedInContent #newsFeed .user p {
+      align-self: center; }
+  #signedInContent #userSettings button,
+  #signedInContent #newsFeed button {
+    font-family: "Raleway", sans-serif;
+    height: 40px;
+    justify-self: end;
+    padding: 7px;
+    width: 100%;
+    background-color: #74b7a5;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 40px;
+    cursor: pointer;
+    align-self: end; }
+    #signedInContent #userSettings button:hover,
+    #signedInContent #newsFeed button:hover {
+      background-color: #599686; }
+    #signedInContent #userSettings button#cancelMembership,
+    #signedInContent #newsFeed button#cancelMembership {
+      background: #a81c1c; }
+      #signedInContent #userSettings button#cancelMembership:hover,
+      #signedInContent #newsFeed button#cancelMembership:hover {
+        background: #9c1818; }
+
+/*-------------------------
+Preferences
+------------------------*/
+#preferencesModal {
+  display: none;
+  position: fixed;
+  z-index: 30;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: black;
+  background-color: rgba(0, 0, 0, 0.4); }
+  #preferencesModal input[type="range"] {
+    margin: 15px 0;
+    width: 250px; }
+  #preferencesModal #skipPrefBtn {
+    cursor: pointer;
+    float: right;
+    background-color: #74b7a5; }
+  #preferencesModal .modalContent {
+    display: grid;
+    color: #717070;
+    background-color: #fefefe;
+    margin: auto;
+    border: 1px solid #888;
+    width: 80%; }
+    #preferencesModal .modalContent form,
+    #preferencesModal .modalContent h1,
+    #preferencesModal .modalContent span {
+      padding: 40px 5vw; }
+    #preferencesModal .modalContent #modalTop {
+      display: grid;
+      grid-template-columns: 1fr 10%;
+      color: white;
+      background-color: #74b7a5; }
+      #preferencesModal .modalContent #modalTop span {
+        justify-self: end; }
+      #preferencesModal .modalContent #modalTop #skipPrefBtn {
+        color: white; }
+    #preferencesModal .modalContent .formField {
+      display: flex;
+      flex-flow: column-reverse;
+      margin-bottom: 1em; }
+      #preferencesModal .modalContent .formField input {
+        background: none;
+        font-size: 1em;
+        border: 0;
+        border-bottom: 1px solid grey;
+        font-family: inherit;
+        width: 100%;
+        -webkit-appearance: none;
+        border-radius: 0;
+        padding: 0;
+        cursor: text; }
+        #preferencesModal .modalContent .formField input:focus {
+          outline: 0;
+          border-bottom: 1px solid #599686; }
+      #preferencesModal .modalContent .formField input:placeholder-shown + label {
+        cursor: text;
+        max-width: 66.66%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transform-origin: left bottom;
+        transform: translate(0, 1.125rem) scale(1.2); }
+      #preferencesModal .modalContent .formField ::-webkit-input-placeholder {
+        opacity: 0;
+        transition: inherit; }
+      #preferencesModal .modalContent .formField input:not(:placeholder-shown) + label,
+      #preferencesModal .modalContent .formField input:focus + label {
+        transition: 0.2s ease all;
+        transform: translate(0, 0) scale(1);
+        cursor: pointer; }
+      #preferencesModal .modalContent .formField input,
+      #preferencesModal .modalContent .formField label {
+        touch-action: manipulation; }
+    #preferencesModal .modalContent form {
+      display: grid; }
+      #preferencesModal .modalContent form h3 {
+        padding-top: 20px; }
+        #preferencesModal .modalContent form h3 i {
+          font-size: 13px; }
+      #preferencesModal .modalContent form h5 {
+        padding-top: 15px;
+        padding-bottom: 5px; }
+      #preferencesModal .modalContent form div {
+        padding: 5px 0px; }
+      #preferencesModal .modalContent form #submitPrefBtn {
+        font-family: "Raleway", sans-serif;
+        height: 40px;
+        justify-self: end;
+        padding: 7px;
+        width: 175px;
+        background-color: #74b7a5;
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 40px;
+        cursor: pointer;
+        align-self: end;
+        margin: 25px 0 0 0; }
+  #preferencesModal .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold; }
+
+.form-popup {
+  display: none;
+  height: 100vh;
+  background-color: #dee9f2; }
+  .form-popup .popup-form-container {
+    padding: 10px;
+    background-color: white;
+    width: 70%;
+    margin: auto; }
+    .form-popup .popup-form-container .popup-form-container .btn {
+      background-color: #dee9f2;
+      color: #60748c;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100px;
+      margin-bottom: 10px;
+      border-radius: 40px; }
+
+/*-------------------------
+Keyframes for border radius header image
+------------------------*/
+@keyframes morph {
+  100% {
+    border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%; }
+  14% {
+    border-radius: 40% 60% 54% 46% / 49% 60% 40% 51%; }
+  28% {
+    border-radius: 54% 46% 38% 62% / 49% 70% 30% 51%; }
+  42% {
+    border-radius: 61% 39% 55% 45% / 61% 38% 62% 39%; }
+  56% {
+    border-radius: 61% 39% 67% 33% / 70% 50% 50% 30%; }
+  70% {
+    border-radius: 50% 50% 34% 66% / 56% 68% 32% 44%; }
+  84% {
+    border-radius: 46% 54% 50% 50% / 35% 61% 39% 65%; } }
+
+/* -----------------------
+        Keyframes for "what you can do" animations 
+------------------------*/
+@keyframes coinFall {
+  from {
+    transform: translateY(0px); }
+  to {
+    transform: translateY(400px); } }
+
+@keyframes moveHead {
+  0% {
+    transform: rotate(0deg); }
+  50% {
+    transform: rotate(8deg); } }
+
+@keyframes moveTail {
+  0% {
+    transform: rotate(-2deg); }
+  10% {
+    transform: rotate(4deg); }
+  20% {
+    transform: rotate(-2deg); }
+  30% {
+    transform: rotate(4deg); }
+  40% {
+    transform: rotate(-2deg); }
+  50% {
+    transform: rotate(4deg); }
+  60% {
+    transform: rotate(-2deg); }
+  70% {
+    transform: rotate(4deg); }
+  80% {
+    transform: rotate(-2deg); }
+  90% {
+    transform: rotate(4deg); }
+  100% {
+    transform: rotate(-2deg); } }
+
+@keyframes eyeBlink {
+  0% {
+    transform: scaleY(0); }
+  10% {
+    transform: scaleY(0); }
+  15% {
+    transform: scaleY(1); }
+  48% {
+    transform: scaleY(1); }
+  50% {
+    transform: scaleY(0); }
+  52% {
+    transform: scaleY(1); }
+  90% {
+    transform: scaleY(1); }
+  95% {
+    transform: scaleY(0); }
+  100% {
+    transform: scaleY(0); } }
+
+@keyframes carBounce {
+  from {
+    transform: translateY(0%); }
+  to {
+    transform: translateY(2%); } }
+
+@keyframes rotateWheel {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
+
+@keyframes catTreeBounce {
+  from {
+    transform: translateY(-1%); }
+  to {
+    transform: translateY(3%); } }
+
+@keyframes boxSideBounce {
+  from {
+    transform: translateY(-2%); }
+  to {
+    transform: translateY(2%); } }
+
+@keyframes boxMiddleBounce {
+  from {
+    transform: translateY(-4%); }
+  to {
+    transform: translateY(3%); } }
+
+@keyframes ballSwing {
+  from {
+    transform: rotate(2deg); }
+  to {
+    transform: rotate(-6deg); } }
+
+/* -----------------------
+        footer 
+------------------------*/
+#footer {
+  padding: 50px 10vw;
+  color: #ffffff;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #a6bdb7; }
+  #footer h3 {
+    margin-bottom: 20px; }
+  #footer .contactInfo {
+    margin-bottom: 20px; }
+  #footer .soMeBtn svg {
+    fill: #ffffff; }
+
+.visible {
+  display: block !important; }
+
+/* -----------------------
+        admin 
+------------------------*/
+#admin {
+  display: none;
+  position: relative; }
+  #admin .hiAdminBtn a {
+    background: transparent;
+    color: #2e2f4b; }
+  #admin aside {
+    position: fixed;
+    top: 60px;
+    width: 15%;
+    height: 100vh;
+    padding: 50px 25px;
+    background: #ead8a6; }
+    #admin aside li {
+      list-style: none;
+      margin-bottom: 50px; }
+      #admin aside li a {
+        color: #b28973;
+        background-color: #ead8a6;
+        text-decoration: none;
+        font-size: 24px;
+        width: calc(100% + 50px);
+        position: relative;
+        left: -25px;
+        display: inline-block;
+        padding: 30px 25px; }
+  #admin .activeAnchor {
+    color: #b28973;
+    background-color: white;
+    transition: background-color 0.7s ease; }
+  #admin main {
+    position: absolute;
+    width: 85%;
+    height: calc(100vh - 60px);
+    top: 60px;
+    right: 0;
+    overflow-y: scroll; }
+    #admin main .section {
+      border-bottom: 7px dotted #2e2f4b;
+      height: auto;
+      min-height: 300px;
+      /* delete me later when all sections are finished */ }
+      #admin main .section p {
+        line-height: 1.3; }
+        #admin main .section p:last-of-type {
+          margin-bottom: 2em; }
+      #admin main .section .subsection {
+        height: auto;
+        padding: 80px 10vw;
+        position: relative; }
+        #admin main .section .subsection.otherToDo {
+          padding: 50px 10vw; }
+        #admin main .section .subsection h2 {
+          margin-bottom: 20px; }
+        #admin main .section .subsection .extraNotice {
+          margin: 15px 0;
+          font-weight: bold; }
+        #admin main .section .subsection .date {
+          font-size: 24px;
+          padding-bottom: 10px;
+          margin-bottom: 0; }
+        #admin main .section .subsection .subsectionHeader {
+          margin-bottom: 20px;
+          display: grid;
+          grid-template-columns: 190px auto 150px; }
+          #admin main .section .subsection .subsectionHeader p {
+            margin: 0;
+            align-self: center; }
+          #admin main .section .subsection .subsectionHeader span {
+            display: inline-block;
+            padding-top: 10px;
+            align-self: center; }
+            #admin main .section .subsection .subsectionHeader span input {
+              width: 95%;
+              /* temp solution */
+              font-size: 16px;
+              border: none;
+              border-bottom: 1px solid #2e2f4b; }
+          #admin main .section .subsection .subsectionHeader .adminBtn {
+            cursor: pointer;
+            text-align: center;
+            background: #74b7a5;
+            width: 100%;
+            height: 40px;
+            padding: 10px 30px;
+            /* temp solution, should achieve vertical align */
+            border-radius: 25px;
+            color: white; }
+        #admin main .section .subsection p img {
+          vertical-align: middle;
+          width: 20px; }
+        #admin main .section .subsection .subsectionToDo {
+          width: 100%;
+          height: 50px;
+          display: grid;
+          grid-template-columns: auto 150px; }
+          #admin main .section .subsection .subsectionToDo span {
+            display: inline-block;
+            padding-top: 10px; }
+            #admin main .section .subsection .subsectionToDo span img {
+              vertical-align: middle;
+              width: 20px; }
+            #admin main .section .subsection .subsectionToDo span input {
+              width: 95%;
+              /* temp solution */
+              font-size: 16px;
+              border: none;
+              border-bottom: 1px solid #2e2f4b; }
+          #admin main .section .subsection .subsectionToDo .adminBtn {
+            cursor: pointer;
+            text-align: center;
+            background: #74b7a5;
+            width: 100%;
+            height: 40px;
+            padding: 10px 30px;
+            /* temp solution, should achieve vertical align */
+            border-radius: 25px;
+            color: white; }
+        #admin main .section .subsection .tableWrapper {
+          width: 100%;
+          height: 370px;
+          margin: 0 auto;
+          position: relative; }
+          #admin main .section .subsection .tableWrapper .firstColumn {
+            position: absolute;
+            width: 20%;
+            height: 100%;
+            background-color: #efefef;
+            display: grid;
+            grid-template-rows: 100px 50px 50px 50px 50px 70px; }
+            #admin main .section .subsection .tableWrapper .firstColumn .head {
+              height: 100px;
+              background-color: #e7debc;
+              display: grid; }
+            #admin main .section .subsection .tableWrapper .firstColumn .row {
+              padding: 20px; }
+              #admin main .section .subsection .tableWrapper .firstColumn .row img {
+                width: 30px;
+                vertical-align: middle; }
+            #admin main .section .subsection .tableWrapper .firstColumn .row:not(.head):not(:last-of-type) {
+              border-bottom: 1px solid #efefef; }
+            #admin main .section .subsection .tableWrapper .firstColumn b {
+              color: #2e2f4b;
+              place-self: center; }
+          #admin main .section .subsection .tableWrapper .columns {
+            overflow-x: scroll;
+            overflow-y: hidden;
+            position: absolute;
+            left: 20%;
+            width: 80%;
+            display: grid;
+            grid-template-columns: repeat(30, auto);
+            white-space: nowrap; }
+            #admin main .section .subsection .tableWrapper .columns .column {
+              border-right: 1px solid #cacaca;
+              display: grid;
+              grid-template-rows: 100px 50px 50px 50px 50px 70px; }
+              #admin main .section .subsection .tableWrapper .columns .column *:not(.animalImage) {
+                pointer-events: none; }
+                #admin main .section .subsection .tableWrapper .columns .column *:not(.animalImage) input[type="checkbox"] {
+                  pointer-events: initial; }
+              #admin main .section .subsection .tableWrapper .columns .column:last-of-type {
+                border-right: none; }
+              #admin main .section .subsection .tableWrapper .columns .column div:nth-child(1) {
+                background-color: #e7debc; }
+              #admin main .section .subsection .tableWrapper .columns .column .animalImage {
+                padding: 10px 23px;
+                display: grid;
+                cursor: pointer; }
+                #admin main .section .subsection .tableWrapper .columns .column .animalImage img {
+                  width: 70px;
+                  height: 70px;
+                  border-radius: 35px;
+                  border-radius: 50%;
+                  place-self: center; }
+              #admin main .section .subsection .tableWrapper .columns .column .noTask {
+                background-image: url(../img/icons/notaskbg.png);
+                background-size: 242px; }
+              #admin main .section .subsection .tableWrapper .columns .column .row {
+                padding: 20px;
+                /* temp solution, should achieve vertical align */
+                border-bottom: 1px solid #cacaca; }
+                #admin main .section .subsection .tableWrapper .columns .column .row img {
+                  width: calc(100% + 40px);
+                  height: calc(100% + 40px);
+                  position: relative;
+                  left: -20px;
+                  top: -20px; }
+                  #admin main .section .subsection .tableWrapper .columns .column .row img .memberName {
+                    font-size: 13px;
+                    margin-left: 5px;
+                    /* temp setting */ }
+                #admin main .section .subsection .tableWrapper .columns .column .row .row:not(:last-of-type):not(.head) {
+                  border-bottom: 1px solid #cacaca; }
+        #admin main .section .subsection .animalDetailModal {
+          z-index: 3;
+          position: absolute;
+          bottom: -260px;
+          left: 0;
+          width: 85vw;
+          height: 550px;
+          padding: 50px;
+          background: white;
+          box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77);
+          border: 2px solid #2e2f4b;
+          display: grid;
+          grid-template-columns: 170px auto 170px;
+          grid-gap: 50px; }
+          #admin main .section .subsection .animalDetailModal .animalImageBig {
+            height: 170px;
+            border-radius: 50%;
+            overflow: hidden; }
+            #admin main .section .subsection .animalDetailModal .animalImageBig img {
+              width: 170px; }
+          #admin main .section .subsection .animalDetailModal .animalDetails {
+            display: grid;
+            grid-template-columns: 200px auto;
+            grid-template-rows: 270px;
+            grid-gap: 20px; }
+            #admin main .section .subsection .animalDetailModal .animalDetails .animalName {
+              /* need to deal with the case if the name is super long? */
+              font-weight: bold;
+              font-size: 19px;
+              height: 30px;
+              margin-bottom: 20px; }
+            #admin main .section .subsection .animalDetailModal .animalDetails li {
+              margin-bottom: 0.5em; }
+              #admin main .section .subsection .animalDetailModal .animalDetails li input {
+                height: 30px; }
+            #admin main .section .subsection .animalDetailModal .animalDetails input {
+              border: none;
+              border-bottom: 1px dashed #2e2f4b;
+              font-size: 16px; }
+            #admin main .section .subsection .animalDetailModal .animalDetails .needAndStory {
+              padding-top: 60px; }
+              #admin main .section .subsection .animalDetailModal .animalDetails .needAndStory p {
+                margin-bottom: 1rem; }
+              #admin main .section .subsection .animalDetailModal .animalDetails .needAndStory section.story textarea {
+                width: 100%;
+                height: 170px;
+                line-height: 1.5;
+                font-size: 13px; }
+            #admin main .section .subsection .animalDetailModal .animalDetails label {
+              margin-right: 20px; }
+            #admin main .section .subsection .animalDetailModal .animalDetails input[type="checkbox"],
+            #admin main .section .subsection .animalDetailModal .animalDetails input[type="radio"] {
+              margin-right: 5px; }
+          #admin main .section .subsection .animalDetailModal .buttons button {
+            display: block;
+            height: 40px;
+            /* need to unify button style */
+            width: 100px;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 20px;
+            background: #2e2f4b;
+            color: white;
+            cursor: pointer; }
+            #admin main .section .subsection .animalDetailModal .buttons button.closeModal {
+              margin-bottom: 190px;
+              background: none;
+              color: #2e2f4b;
+              font-size: 24px; }
+            #admin main .section .subsection .animalDetailModal .buttons button.deleteAnimal:hover {
+              background: red; }
+          #admin main .section .subsection .animalDetailModal.hide {
+            display: none; }
+        #admin main .section .subsection .toDoListWrapper {
+          width: 70%;
+          /* temp solution. Need to figure out if and how should this part be aligned to other elements */
+          margin: 0 26px; }
+          #admin main .section .subsection .toDoListWrapper span {
+            margin-left: 15px; }
+          #admin main .section .subsection .toDoListWrapper span.userMessage {
+            color: red; }
+          #admin main .section .subsection .toDoListWrapper div {
+            line-height: 2rem; }
+            #admin main .section .subsection .toDoListWrapper div input[type="checkbox"] {
+              margin-left: -25px; }
+  #admin .adminForm {
+    overflow-y: scroll;
+    position: fixed;
+    z-index: 2;
+    right: 0;
+    top: 60px;
+    width: 30%;
+    height: calc(100vh - 60px);
+    background: white;
+    border-left: 1px solid #2e2f4b;
+    padding: 40px; }
+    #admin .adminForm.hide {
+      display: none; }
+    #admin .adminForm .close {
+      position: absolute;
+      right: 50px;
+      top: 50px;
+      cursor: pointer; }
+
+.addAnimalForm p:nth-child(1),
+.addAnimalForm p:nth-child(10),
+.addAnimalForm p:nth-child(13),
+.addAnimalForm p:nth-child(19) {
+  font-size: 1.2em; }
+
+.addAnimalForm p:nth-child(9) label {
+  padding: 0; }
+
+.addAnimalForm p {
+  padding: 10px 0px; }
+  .addAnimalForm p label {
+    padding-left: 5px; }
+
+.addAnimalForm input[type="text"],
+.addAnimalForm input[type="number"],
+.addAnimalForm textarea {
+  padding: 6px;
+  border: 1px solid #999;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none; }
+
+.addAnimalForm .addAnimalToDB {
+  background-color: #2e2f4b;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  height: 40px;
+  padding: 10px 30px;
+  border-radius: 25px;
+  color: white; }
+
+.addAnimalForm div {
+  text-align: center;
+  width: 100%;
+  height: 40px;
+  padding: 10px 30px;
+  border: 2px solid #2e2f4b;
+  border-radius: 25px;
+  color: white; }
+  .addAnimalForm div #uploadBtnAdmin {
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute; }
+  .addAnimalForm div label {
+    cursor: pointer;
+    color: #2e2f4b; }
+
+#postAndNotify {
+  padding: 70px 10vw;
+  height: auto; }
+  #postAndNotify h3 {
+    padding: 20px 0; }
+  #postAndNotify .postsContainer {
+    height: auto;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    margin-bottom: 60px; }
+    #postAndNotify .postsContainer .publishContainer {
+      border-right: 1px solid black;
+      padding-right: 50px;
+      display: grid; }
+      #postAndNotify .postsContainer .publishContainer p {
+        width: 90%; }
+      #postAndNotify .postsContainer .publishContainer .receviedPictures {
+        width: 100%;
+        height: calc(54vh + 34px);
+        overflow: scroll;
+        display: grid;
+        grid-template-columns: 18vh 18vh 18vh;
+        grid-template-rows: 18vh 18vh 18vh;
+        grid-gap: 17px;
+        justify-content: center; }
+        #postAndNotify .postsContainer .publishContainer .receviedPictures .singlePic {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          background-size: cover; }
+          #postAndNotify .postsContainer .publishContainer .receviedPictures .singlePic label {
+            display: inline-block;
+            width: 130px;
+            height: 130px; }
+      #postAndNotify .postsContainer .publishContainer .publishBtn {
+        justify-self: end;
+        align-self: end;
+        right: 0px;
+        bottom: -45px;
+        cursor: pointer;
+        text-align: center;
+        background: #74b7a5;
+        height: 40px;
+        padding: 10px 30px;
+        /* temp solution, should achieve vertical align */
+        border-radius: 25px;
+        color: white;
+        border: none; }
+    #postAndNotify .postsContainer .dragAndDropContainer {
+      padding: 0 0 0 50px;
+      position: relative;
+      height: 100%; }
+      #postAndNotify .postsContainer .dragAndDropContainer p:nth-child(2) {
+        padding: 15px 0;
+        padding-bottom: 30px; }
+      #postAndNotify .postsContainer .dragAndDropContainer p:nth-child(3) {
+        padding: 15px 0; }
+      #postAndNotify .postsContainer .dragAndDropContainer label {
+        margin-bottom: 10px; }
+        #postAndNotify .postsContainer .dragAndDropContainer label input {
+          margin-right: 10px; }
+      #postAndNotify .postsContainer .dragAndDropContainer .writeNotification {
+        height: 150px;
+        width: 100%;
+        display: block; }
+      #postAndNotify .postsContainer .dragAndDropContainer #nofiticationAdmin p {
+        display: grid;
+        grid-template-columns: 1fr; }
+      #postAndNotify .postsContainer .dragAndDropContainer div {
+        text-align: center;
+        height: 40px;
+        padding: 10px 30px;
+        border: 2px solid #74b7a5;
+        border-radius: 25px;
+        color: white;
+        margin: auto;
+        margin-top: 30px;
+        padding-bottom: 30px; }
+        #postAndNotify .postsContainer .dragAndDropContainer div #uploadFileAdmin {
+          pointer-events: none;
+          opacity: 0;
+          overflow: hidden;
+          position: absolute; }
+        #postAndNotify .postsContainer .dragAndDropContainer div label {
+          cursor: pointer;
+          color: #2e2f4b; }
+      #postAndNotify .postsContainer .dragAndDropContainer .postBtn {
+        margin: 30px 0px;
+        width: 100%;
+        margin-bottom: 0;
+        right: 0px;
+        bottom: -22px;
+        cursor: pointer;
+        text-align: center;
+        background: #74b7a5;
+        height: 40px;
+        padding: 10px 30px;
+        /* temp solution, should achieve vertical align */
+        border-radius: 25px;
+        color: white;
+        border: none; }
+
+#status {
+  padding: 85px 10vw; }
+  #status h2 {
+    padding-bottom: 20px; }
+  #status hr:last-of-type {
+    margin-bottom: 10px; }
+  #status h3 {
+    margin-bottom: 10px; }
+  #status p {
+    margin-top: 15px; }
+  #status .Economy p img {
+    height: 20px; }
+  #status .animalStatus div p {
+    margin-bottom: 15px; }
+  #status .animalStatus p {
+    margin-bottom: 15px; }
+    #status .animalStatus p img {
+      height: 20px; }
+  #status .monthsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 75px);
+    margin: auto;
+    margin-top: 25px;
+    margin-bottom: 25px; }
+    #status .monthsContainer .month {
+      width: 70px;
+      height: 130px;
+      border: 2px solid lightblue; }
+  #status .statistiOfAnimals {
+    margin-top: 20px; }
+    #status .statistiOfAnimals #curve_chart {
+      width: 100%;
+      height: 200px; }
+  #status .listOfDonations {
+    margin-top: 20px;
+    margin-bottom: 20px; }
+    #status .listOfDonations .donationsTableContainer p {
+      margin-top: 5px; }
+    #status .listOfDonations .singleMember {
+      padding: 10px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-gap: 20px; }
+      #status .listOfDonations .singleMember .aboutMember {
+        height: 35px; }
+      #status .listOfDonations .singleMember .emailBox {
+        width: 150px; }
+        #status .listOfDonations .singleMember .emailBox p {
+          text-overflow: ellipsis;
+          overflow: hidden; }
+      #status .listOfDonations .singleMember #moneyDonation,
+      #status .listOfDonations .singleMember #timeDonation,
+      #status .listOfDonations .singleMember #stuffDonation {
+        background-color: #b28973;
+        color: white;
+        height: 3px;
+        width: 0;
+        color: #b28973; }
+        #status .listOfDonations .singleMember #moneyDonation p,
+        #status .listOfDonations .singleMember #timeDonation p,
+        #status .listOfDonations .singleMember #stuffDonation p {
+          white-space: nowrap; }
+      #status .listOfDonations .singleMember:nth-of-type(2n) {
+        background: #efefef; }
+
+@media only screen and (min-width: 650px) and (max-width: 900px) {
+  /*-----------------------------
+        Signed in page 
+  -----------------------------*/
+  /* ----------------------
+        Forms
+-----------------------*/
+  #signedInContent #sendToUsForms,
+  #signedInContent #frontpageForms,
+  #lastBox #sendToUsForms,
+  #lastBox #frontpageForms {
+    grid-template-columns: 1fr 1fr; }
+    #signedInContent #sendToUsForms #messageForm,
+    #signedInContent #sendToUsForms #signupForm,
+    #signedInContent #sendToUsForms #imageForm,
+    #signedInContent #sendToUsForms #donationForm,
+    #signedInContent #sendToUsForms #stuffDonationForm,
+    #signedInContent #frontpageForms #messageForm,
+    #signedInContent #frontpageForms #signupForm,
+    #signedInContent #frontpageForms #imageForm,
+    #signedInContent #frontpageForms #donationForm,
+    #signedInContent #frontpageForms #stuffDonationForm,
+    #lastBox #sendToUsForms #messageForm,
+    #lastBox #sendToUsForms #signupForm,
+    #lastBox #sendToUsForms #imageForm,
+    #lastBox #sendToUsForms #donationForm,
+    #lastBox #sendToUsForms #stuffDonationForm,
+    #lastBox #frontpageForms #messageForm,
+    #lastBox #frontpageForms #signupForm,
+    #lastBox #frontpageForms #imageForm,
+    #lastBox #frontpageForms #donationForm,
+    #lastBox #frontpageForms #stuffDonationForm {
+      margin: 45px;
+      padding: 30px;
+      border-radius: 30px; }
+      #signedInContent #sendToUsForms #messageForm h2,
+      #signedInContent #sendToUsForms #signupForm h2,
+      #signedInContent #sendToUsForms #imageForm h2,
+      #signedInContent #sendToUsForms #donationForm h2,
+      #signedInContent #sendToUsForms #stuffDonationForm h2,
+      #signedInContent #frontpageForms #messageForm h2,
+      #signedInContent #frontpageForms #signupForm h2,
+      #signedInContent #frontpageForms #imageForm h2,
+      #signedInContent #frontpageForms #donationForm h2,
+      #signedInContent #frontpageForms #stuffDonationForm h2,
+      #lastBox #sendToUsForms #messageForm h2,
+      #lastBox #sendToUsForms #signupForm h2,
+      #lastBox #sendToUsForms #imageForm h2,
+      #lastBox #sendToUsForms #donationForm h2,
+      #lastBox #sendToUsForms #stuffDonationForm h2,
+      #lastBox #frontpageForms #messageForm h2,
+      #lastBox #frontpageForms #signupForm h2,
+      #lastBox #frontpageForms #imageForm h2,
+      #lastBox #frontpageForms #donationForm h2,
+      #lastBox #frontpageForms #stuffDonationForm h2 {
+        font-size: 18px;
+        margin-top: 0px; }
+      #signedInContent #sendToUsForms #messageForm form button,
+      #signedInContent #sendToUsForms #signupForm form button,
+      #signedInContent #sendToUsForms #imageForm form button,
+      #signedInContent #sendToUsForms #donationForm form button,
+      #signedInContent #sendToUsForms #stuffDonationForm form button,
+      #signedInContent #frontpageForms #messageForm form button,
+      #signedInContent #frontpageForms #signupForm form button,
+      #signedInContent #frontpageForms #imageForm form button,
+      #signedInContent #frontpageForms #donationForm form button,
+      #signedInContent #frontpageForms #stuffDonationForm form button,
+      #lastBox #sendToUsForms #messageForm form button,
+      #lastBox #sendToUsForms #signupForm form button,
+      #lastBox #sendToUsForms #imageForm form button,
+      #lastBox #sendToUsForms #donationForm form button,
+      #lastBox #sendToUsForms #stuffDonationForm form button,
+      #lastBox #frontpageForms #messageForm form button,
+      #lastBox #frontpageForms #signupForm form button,
+      #lastBox #frontpageForms #imageForm form button,
+      #lastBox #frontpageForms #donationForm form button,
+      #lastBox #frontpageForms #stuffDonationForm form button {
+        margin-top: 19px;
+        margin-bottom: 0px; }
+      #signedInContent #sendToUsForms #messageForm .formField,
+      #signedInContent #sendToUsForms #signupForm .formField,
+      #signedInContent #sendToUsForms #imageForm .formField,
+      #signedInContent #sendToUsForms #donationForm .formField,
+      #signedInContent #sendToUsForms #stuffDonationForm .formField,
+      #signedInContent #frontpageForms #messageForm .formField,
+      #signedInContent #frontpageForms #signupForm .formField,
+      #signedInContent #frontpageForms #imageForm .formField,
+      #signedInContent #frontpageForms #donationForm .formField,
+      #signedInContent #frontpageForms #stuffDonationForm .formField,
+      #lastBox #sendToUsForms #messageForm .formField,
+      #lastBox #sendToUsForms #signupForm .formField,
+      #lastBox #sendToUsForms #imageForm .formField,
+      #lastBox #sendToUsForms #donationForm .formField,
+      #lastBox #sendToUsForms #stuffDonationForm .formField,
+      #lastBox #frontpageForms #messageForm .formField,
+      #lastBox #frontpageForms #signupForm .formField,
+      #lastBox #frontpageForms #imageForm .formField,
+      #lastBox #frontpageForms #donationForm .formField,
+      #lastBox #frontpageForms #stuffDonationForm .formField {
+        margin-bottom: 0;
+        padding: 0; }
+        #signedInContent #sendToUsForms #messageForm .formField input,
+        #signedInContent #sendToUsForms #signupForm .formField input,
+        #signedInContent #sendToUsForms #imageForm .formField input,
+        #signedInContent #sendToUsForms #donationForm .formField input,
+        #signedInContent #sendToUsForms #stuffDonationForm .formField input,
+        #signedInContent #frontpageForms #messageForm .formField input,
+        #signedInContent #frontpageForms #signupForm .formField input,
+        #signedInContent #frontpageForms #imageForm .formField input,
+        #signedInContent #frontpageForms #donationForm .formField input,
+        #signedInContent #frontpageForms #stuffDonationForm .formField input,
+        #lastBox #sendToUsForms #messageForm .formField input,
+        #lastBox #sendToUsForms #signupForm .formField input,
+        #lastBox #sendToUsForms #imageForm .formField input,
+        #lastBox #sendToUsForms #donationForm .formField input,
+        #lastBox #sendToUsForms #stuffDonationForm .formField input,
+        #lastBox #frontpageForms #messageForm .formField input,
+        #lastBox #frontpageForms #signupForm .formField input,
+        #lastBox #frontpageForms #imageForm .formField input,
+        #lastBox #frontpageForms #donationForm .formField input,
+        #lastBox #frontpageForms #stuffDonationForm .formField input {
+          font-size: 0.8em;
+          margin: 19px 0px;
+          width: 100%; }
+        #signedInContent #sendToUsForms #messageForm .formField label,
+        #signedInContent #sendToUsForms #signupForm .formField label,
+        #signedInContent #sendToUsForms #imageForm .formField label,
+        #signedInContent #sendToUsForms #donationForm .formField label,
+        #signedInContent #sendToUsForms #stuffDonationForm .formField label,
+        #signedInContent #frontpageForms #messageForm .formField label,
+        #signedInContent #frontpageForms #signupForm .formField label,
+        #signedInContent #frontpageForms #imageForm .formField label,
+        #signedInContent #frontpageForms #donationForm .formField label,
+        #signedInContent #frontpageForms #stuffDonationForm .formField label,
+        #lastBox #sendToUsForms #messageForm .formField label,
+        #lastBox #sendToUsForms #signupForm .formField label,
+        #lastBox #sendToUsForms #imageForm .formField label,
+        #lastBox #sendToUsForms #donationForm .formField label,
+        #lastBox #sendToUsForms #stuffDonationForm .formField label,
+        #lastBox #frontpageForms #messageForm .formField label,
+        #lastBox #frontpageForms #signupForm .formField label,
+        #lastBox #frontpageForms #imageForm .formField label,
+        #lastBox #frontpageForms #donationForm .formField label,
+        #lastBox #frontpageForms #stuffDonationForm .formField label {
+          font-size: 13px; }
+  /*-----------------------------*/
+  /* Frontpage */
+  /*-----------------------------*/
+  #intro {
+    height: 95vh; }
+    #intro .introPic .dots {
+      position: relative; }
+      #intro .introPic .dots div:nth-child(1) {
+        width: 40px;
+        top: 19vh;
+        right: 10vw;
+        height: 40px; }
+      #intro .introPic .dots div:nth-child(2) {
+        width: 20px;
+        top: 30vh;
+        right: 8vw;
+        height: 20px; }
+      #intro .introPic .dots div:nth-child(3) {
+        width: 15px;
+        top: 60vh;
+        right: 12vw;
+        height: 15px; }
+      #intro .introPic .dots div:nth-child(4) {
+        width: 20px;
+        top: 20vh;
+        left: 5vw;
+        height: 20px; }
+    #intro .introPic .introCat {
+      top: 320px;
+      left: -10vw; }
+      #intro .introPic .introCat img {
+        width: 25vw; }
+  #aboutUs {
+    display: block;
+    height: auto;
+    padding: 25px; }
+    #aboutUs h1 {
+      font-size: 26px;
+      padding: 10px; }
+    #aboutUs h2 {
+      font-size: 22px;
+      margin: 5px 0;
+      padding-top: 22px; }
+    #aboutUs .aboutCont {
+      padding: 3vw;
+      padding-top: 0; }
+      #aboutUs .aboutCont #walkDog,
+      #aboutUs .aboutCont #errandCar,
+      #aboutUs .aboutCont #coinCat {
+        width: 150px;
+        height: 150px; }
+        #aboutUs .aboutCont #walkDog svg,
+        #aboutUs .aboutCont #errandCar svg,
+        #aboutUs .aboutCont #coinCat svg {
+          width: 150px; }
+    #aboutUs p {
+      font-size: 15px; }
+  #lastBox {
+    display: grid;
+    margin: auto; }
+    #lastBox h2 {
+      text-align: center;
+      align-self: end;
+      margin: 20px 0; }
+    #lastBox #animalImage {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); }
+      #lastBox #animalImage div {
+        margin: 20px 0;
+        justify-self: center; }
+        #lastBox #animalImage div img {
+          width: 95px; }
+  #footer .contactBox h3 {
+    font-size: 16px; }
+  #footer .contactBox p {
+    font-size: 14.5px; }
+  #footer .contactBox svg {
+    width: 50px;
+    height: 50px; }
+  #footer #subscribeForm h3 {
+    font-size: 16px; }
+  #footer #subscribeForm label {
+    font-size: 13px; } }
+
+@media (max-width: 1100px) {
+  #signedInContent #yourPets #animalBox #animalViewBox {
+    width: 696px; } }
+
+@media (max-width: 850px) {
+  #signedInContent #yourPets #animalBox #animalViewBox {
+    width: 522px; }
+  #signedInContent #petExpand {
+    grid-row-gap: 30px;
+    grid-template-columns: 1fr; }
+    #signedInContent #petExpand .bigAnimalImage {
+      justify-self: center; } }
+
+@media (max-width: 660px) {
+  #signedInContent #yourPets #animalBox #animalViewBox {
+    width: 348px; } }
+
+@media (max-width: 650px) {
+  /*----------------------------*/
+  /*   Forms                    */
+  /*----------------------------*/
+  #sendToUsForms,
+  #frontpageForms {
+    grid-template-columns: 1fr; }
+    #sendToUsForms #messageForm,
+    #sendToUsForms #imageForm,
+    #sendToUsForms #signupForm,
+    #sendToUsForms #donationForm,
+    #sendToUsForms #stuffDonationForm,
+    #frontpageForms #messageForm,
+    #frontpageForms #imageForm,
+    #frontpageForms #signupForm,
+    #frontpageForms #donationForm,
+    #frontpageForms #stuffDonationForm {
+      margin: 50px;
+      padding: 40px;
+      border-radius: h2;
+        border-radius-font-size: 20px;
+        border-radius-margin-top: 0px; }
+      #sendToUsForms #messageForm form button,
+      #sendToUsForms #imageForm form button,
+      #sendToUsForms #signupForm form button,
+      #sendToUsForms #donationForm form button,
+      #sendToUsForms #stuffDonationForm form button,
+      #frontpageForms #messageForm form button,
+      #frontpageForms #imageForm form button,
+      #frontpageForms #signupForm form button,
+      #frontpageForms #donationForm form button,
+      #frontpageForms #stuffDonationForm form button {
+        margin-top: 19px;
+        margin-bottom: 0px; }
+      #sendToUsForms #messageForm .formField,
+      #sendToUsForms #imageForm .formField,
+      #sendToUsForms #signupForm .formField,
+      #sendToUsForms #donationForm .formField,
+      #sendToUsForms #stuffDonationForm .formField,
+      #frontpageForms #messageForm .formField,
+      #frontpageForms #imageForm .formField,
+      #frontpageForms #signupForm .formField,
+      #frontpageForms #donationForm .formField,
+      #frontpageForms #stuffDonationForm .formField {
+        margin-bottom: 0;
+        padding: 0; }
+        #sendToUsForms #messageForm .formField input,
+        #sendToUsForms #imageForm .formField input,
+        #sendToUsForms #signupForm .formField input,
+        #sendToUsForms #donationForm .formField input,
+        #sendToUsForms #stuffDonationForm .formField input,
+        #frontpageForms #messageForm .formField input,
+        #frontpageForms #imageForm .formField input,
+        #frontpageForms #signupForm .formField input,
+        #frontpageForms #donationForm .formField input,
+        #frontpageForms #stuffDonationForm .formField input {
+          font-size: 0.8em;
+          margin: 19px 0px;
+          width: 100%; }
+        #sendToUsForms #messageForm .formField label,
+        #sendToUsForms #imageForm .formField label,
+        #sendToUsForms #signupForm .formField label,
+        #sendToUsForms #donationForm .formField label,
+        #sendToUsForms #stuffDonationForm .formField label,
+        #frontpageForms #messageForm .formField label,
+        #frontpageForms #imageForm .formField label,
+        #frontpageForms #signupForm .formField label,
+        #frontpageForms #donationForm .formField label,
+        #frontpageForms #stuffDonationForm .formField label {
+          font-size: 15px; }
+  /*----------------------------*/
+  /*   Frontpage                */
+  /*----------------------------*/
+  #intro {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding-top: 100px;
+    height: auto; }
+    #intro .introText {
+      width: 90vw; }
+      #intro .introText .catchphrase {
+        text-align: center; }
+        #intro .introText .catchphrase h1 {
+          padding-top: 30px;
+          font-size: 8vw; }
+          #intro .introText .catchphrase h1 span {
+            font-size: 12vw; }
+      #intro .introText p {
+        text-align: center;
+        padding-bottom: 45px; }
+    #intro .introPic {
+      grid-row-start: 1;
+      height: 250px;
+      width: 100%; }
+      #intro .introPic .circle {
+        position: relative;
+        margin: auto; }
+        #intro .introPic .circle img {
+          width: 250px;
+          height: auto;
+          margin: auto; }
+      #intro .introPic .introCat {
+        top: 130px;
+        left: 10vw; }
+        #intro .introPic .introCat img {
+          width: 30vw; }
+      #intro .introPic .dots div:nth-child(1) {
+        width: 30px;
+        top: 6vh;
+        right: 17vw;
+        height: 30px; }
+      #intro .introPic .dots div:nth-child(2) {
+        width: 15px;
+        top: 15vh;
+        right: 15vw;
+        height: 15px; }
+      #intro .introPic .dots div:nth-child(3) {
+        width: 13px;
+        top: 30vh;
+        right: 19vw;
+        height: 13px; }
+      #intro .introPic .dots div:nth-child(4) {
+        width: 15px;
+        top: 20vh;
+        left: 20vw;
+        height: 15px; }
+  #aboutUs {
+    display: block;
+    height: auto; }
+    #aboutUs h1 {
+      font-size: 26px;
+      padding-top: 10px; }
+    #aboutUs h2 {
+      font-size: 22px;
+      margin: 5px 0;
+      padding-top: 22px; }
+    #aboutUs .aboutCont {
+      display: block;
+      margin: auto;
+      padding: 5vw;
+      padding-top: 0; }
+      #aboutUs .aboutCont #walkDog,
+      #aboutUs .aboutCont #errandCar,
+      #aboutUs .aboutCont #coinCat {
+        width: 170px;
+        height: 170px; }
+        #aboutUs .aboutCont #walkDog svg,
+        #aboutUs .aboutCont #errandCar svg,
+        #aboutUs .aboutCont #coinCat svg {
+          width: 170px; }
+    #aboutUs p {
+      font-size: 15px; }
+  #lastBox {
+    display: grid;
+    margin: auto; }
+    #lastBox h2 {
+      text-align: center;
+      align-self: end;
+      margin: 20px 0; }
+    #lastBox #animalImage {
+      padding: 0px 5px;
+      padding-top: 5px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); }
+      #lastBox #animalImage div {
+        margin: 20px 0;
+        justify-self: center; }
+        #lastBox #animalImage div img {
+          width: 80px; }
+  #footer {
+    padding: 30px;
+    padding-left: 95px;
+    padding-right: 95px;
+    grid-template-columns: 1fr; }
+    #footer #subscribeForm {
+      grid-row-start: 1; }
+      #footer #subscribeForm h3 {
+        margin-bottom: 10px;
+        font-size: 17px; }
+      #footer #subscribeForm input {
+        width: 90%; }
+      #footer #subscribeForm label {
+        font-size: 15px; }
+      #footer #subscribeForm button {
+        height: 40px;
+        margin-right: 30px; }
+    #footer .contactBox {
+      grid-gap: 5px;
+      padding-top: 15px; }
+      #footer .contactBox h3 {
+        margin-bottom: 10px;
+        font-size: 17px; }
+      #footer .contactBox p {
+        font-size: 16px; }
+      #footer .contactBox svg {
+        width: 50px;
+        height: 50px; } }
+
+/* ----------------------
+      Mobile version
+-----------------------*/
+@media (max-width: 450px) {
+  /* ----------------------
+        Signed in page
+-----------------------*/
+  #loginForm {
+    width: 62vw; }
+  #signedInContent #userSettings,
+  #signedInContent #newsFeed {
+    width: 100vw;
+    padding: 50px;
+    padding-bottom: 100px; }
+    #signedInContent #userSettings h2,
+    #signedInContent #newsFeed h2 {
+      font-size: 1.4em; }
+    #signedInContent #userSettings .user p,
+    #signedInContent #newsFeed .user p {
+      font-size: 1.2em; }
+    #signedInContent #userSettings .user img,
+    #signedInContent #newsFeed .user img {
+      width: 50px; }
+  #signedInContent #yourPets #animalBox #animalViewBox {
+    width: 174px; }
+  #newsBtn,
+  #settingBtn {
+    display: none; }
+  #mobileMenu {
+    background-color: white;
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77);
+    position: fixed;
+    bottom: 0%;
+    width: 100%;
+    height: 60px; }
+    #mobileMenu svg {
+      width: 25px;
+      margin-right: 8px;
+      vertical-align: middle; }
+    #mobileMenu div {
+      justify-self: center;
+      align-self: center; }
+  #signedInContent #yourPets #animalList {
+    grid-template-columns: 1fr;
+    align-self: center;
+    justify-self: center; }
+    #signedInContent #yourPets #animalList .eachAnimal {
+      width: 200px;
+      height: 200px;
+      margin: 20px; }
+  /* ----------------------
+        Forms
+-----------------------*/
+  #signedInContent #sendToUsForms,
+  #frontpageForms #sendToUsForms {
+    padding: 10vw;
+    width: 100%;
+    grid-template-columns: 1fr; }
+    #signedInContent #sendToUsForms #stuffDonationForm,
+    #signedInContent #sendToUsForms #messageForm,
+    #signedInContent #sendToUsForms #signupForm,
+    #signedInContent #sendToUsForms #imageForm,
+    #signedInContent #sendToUsForms #donationForm,
+    #frontpageForms #sendToUsForms #stuffDonationForm,
+    #frontpageForms #sendToUsForms #messageForm,
+    #frontpageForms #sendToUsForms #signupForm,
+    #frontpageForms #sendToUsForms #imageForm,
+    #frontpageForms #sendToUsForms #donationForm {
+      margin: 34px;
+      padding: 30px; }
+      #signedInContent #sendToUsForms #stuffDonationForm h2,
+      #signedInContent #sendToUsForms #messageForm h2,
+      #signedInContent #sendToUsForms #signupForm h2,
+      #signedInContent #sendToUsForms #imageForm h2,
+      #signedInContent #sendToUsForms #donationForm h2,
+      #frontpageForms #sendToUsForms #stuffDonationForm h2,
+      #frontpageForms #sendToUsForms #messageForm h2,
+      #frontpageForms #sendToUsForms #signupForm h2,
+      #frontpageForms #sendToUsForms #imageForm h2,
+      #frontpageForms #sendToUsForms #donationForm h2 {
+        font-size: 20px;
+        margin-top: 0px; }
+      #signedInContent #sendToUsForms #stuffDonationForm form button,
+      #signedInContent #sendToUsForms #messageForm form button,
+      #signedInContent #sendToUsForms #signupForm form button,
+      #signedInContent #sendToUsForms #imageForm form button,
+      #signedInContent #sendToUsForms #donationForm form button,
+      #frontpageForms #sendToUsForms #stuffDonationForm form button,
+      #frontpageForms #sendToUsForms #messageForm form button,
+      #frontpageForms #sendToUsForms #signupForm form button,
+      #frontpageForms #sendToUsForms #imageForm form button,
+      #frontpageForms #sendToUsForms #donationForm form button {
+        margin-top: 19px;
+        margin-bottom: 0px; }
+      #signedInContent #sendToUsForms #stuffDonationForm .formField,
+      #signedInContent #sendToUsForms #messageForm .formField,
+      #signedInContent #sendToUsForms #signupForm .formField,
+      #signedInContent #sendToUsForms #imageForm .formField,
+      #signedInContent #sendToUsForms #donationForm .formField,
+      #frontpageForms #sendToUsForms #stuffDonationForm .formField,
+      #frontpageForms #sendToUsForms #messageForm .formField,
+      #frontpageForms #sendToUsForms #signupForm .formField,
+      #frontpageForms #sendToUsForms #imageForm .formField,
+      #frontpageForms #sendToUsForms #donationForm .formField {
+        margin-bottom: 0;
+        padding: 0; }
+        #signedInContent #sendToUsForms #stuffDonationForm .formField input,
+        #signedInContent #sendToUsForms #messageForm .formField input,
+        #signedInContent #sendToUsForms #signupForm .formField input,
+        #signedInContent #sendToUsForms #imageForm .formField input,
+        #signedInContent #sendToUsForms #donationForm .formField input,
+        #frontpageForms #sendToUsForms #stuffDonationForm .formField input,
+        #frontpageForms #sendToUsForms #messageForm .formField input,
+        #frontpageForms #sendToUsForms #signupForm .formField input,
+        #frontpageForms #sendToUsForms #imageForm .formField input,
+        #frontpageForms #sendToUsForms #donationForm .formField input {
+          font-size: 0.7em;
+          margin: 19px 0px;
+          width: 100%; }
+        #signedInContent #sendToUsForms #stuffDonationForm .formField label,
+        #signedInContent #sendToUsForms #messageForm .formField label,
+        #signedInContent #sendToUsForms #signupForm .formField label,
+        #signedInContent #sendToUsForms #imageForm .formField label,
+        #signedInContent #sendToUsForms #donationForm .formField label,
+        #frontpageForms #sendToUsForms #stuffDonationForm .formField label,
+        #frontpageForms #sendToUsForms #messageForm .formField label,
+        #frontpageForms #sendToUsForms #signupForm .formField label,
+        #frontpageForms #sendToUsForms #imageForm .formField label,
+        #frontpageForms #sendToUsForms #donationForm .formField label {
+          font-size: 15px; }
+  #preferencesModal .modalContent #modalTop {
+    display: grid;
+    grid-template-columns: 1fr; }
+    #preferencesModal .modalContent #modalTop h1 {
+      padding: 40px 5vw 0 5vw; }
+    #preferencesModal .modalContent #modalTop span {
+      padding: 0 5vw 40px 5vw; }
+  /* ----------------------
+        Frontpage
+-----------------------*/
+  #intro {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding-top: 100px; }
+    #intro .introText {
+      width: 90vw; }
+      #intro .introText .catchphrase {
+        text-align: center; }
+        #intro .introText .catchphrase h1 {
+          font-size: 10vw; }
+          #intro .introText .catchphrase h1 span {
+            font-size: 15vw; }
+      #intro .introText p {
+        text-align: center;
+        padding-bottom: 22px; }
+    #intro .introPic {
+      grid-row-start: 1;
+      height: 200px;
+      width: 100%; }
+      #intro .introPic .circle {
+        position: relative;
+        margin: auto; }
+        #intro .introPic .circle img {
+          width: 250px;
+          height: auto;
+          margin: auto; }
+      #intro .introPic .introCat {
+        top: 152px;
+        left: 4vw; }
+        #intro .introPic .introCat img {
+          width: 40vw; }
+      #intro .introPic .dots {
+        position: relative; }
+        #intro .introPic .dots div:nth-child(1) {
+          width: 30px;
+          top: 6vh;
+          right: 10vw;
+          height: 30px; }
+        #intro .introPic .dots div:nth-child(2) {
+          width: 15px;
+          top: 15vh;
+          right: 8vw;
+          height: 15px; }
+        #intro .introPic .dots div:nth-child(3) {
+          width: 13px;
+          top: 30vh;
+          right: 12vw;
+          height: 13px; }
+        #intro .introPic .dots div:nth-child(4) {
+          width: 15px;
+          top: 20vh;
+          left: 2vw;
+          height: 15px; }
+  #aboutUs {
+    display: block;
+    height: auto; }
+    #aboutUs h1 {
+      font-size: 24px;
+      padding-top: 10px; }
+    #aboutUs h2 {
+      font-size: 20px;
+      margin: 5px 0;
+      padding-top: 22px; }
+    #aboutUs .aboutCont {
+      display: block;
+      margin: auto;
+      padding: 5vw;
+      padding-top: 0; }
+      #aboutUs .aboutCont #walkDog,
+      #aboutUs .aboutCont #errandCar,
+      #aboutUs .aboutCont #coinCat {
+        width: 150px;
+        height: 150px; }
+        #aboutUs .aboutCont #walkDog svg,
+        #aboutUs .aboutCont #errandCar svg,
+        #aboutUs .aboutCont #coinCat svg {
+          width: 150px; }
+    #aboutUs p {
+      font-size: 14px; }
+  #lastBox {
+    color: white;
+    display: grid; }
+    #lastBox h2 {
+      text-align: center;
+      align-self: end;
+      margin: 20px 0; }
+    #lastBox #animalImage {
+      padding: 0px 5px;
+      padding-top: 5px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); }
+      #lastBox #animalImage div {
+        margin: 20px 0;
+        justify-self: center; }
+        #lastBox #animalImage div img {
+          width: 70px;
+          border-radius: 50%; }
+  #footer {
+    padding: 30px 30px 100px 30px;
+    grid-template-columns: 1fr; }
+    #footer #subscribeForm {
+      grid-row-start: 1; }
+      #footer #subscribeForm h3 {
+        margin-bottom: 10px;
+        font-size: 15px; }
+      #footer #subscribeForm label {
+        font-size: 13px; }
+      #footer #subscribeForm button {
+        height: 30px; }
+    #footer .contactBox {
+      padding-top: 15px; }
+      #footer .contactBox h3 {
+        margin-bottom: 10px;
+        margin-top: 10px;
+        font-size: 15px; }
+      #footer .contactBox p {
+        font-size: 14px; }
+      #footer .contactBox svg {
+        width: 50px;
+        height: 50px; } }
