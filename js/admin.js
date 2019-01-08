@@ -795,7 +795,7 @@ db.collection("animals")
               dogCost;
             document.querySelector(".result").textContent = result;
             if (result < 0) {
-              document.querySelector(".hint").textContent =
+              document.querySelector(".hint i").textContent =
                 "didn't raise enough money this month to cover the cost, must use reserve.";
             }
           });
@@ -868,3 +868,145 @@ db.collection("animals")
         }
       });
   });
+
+//////////////////////////////
+/*--------------------------------------
+Intersection observer on the admin sidebar menu
+-------------------------------------*/
+
+//get sections from the DOM
+const dailyTasksSection = document.querySelector(".animalTasks");
+const dailyTasksAnchor = document.querySelector("aside ul li:nth-child(1) a");
+const postAndNotifySection = document.querySelector(".postBtn");
+const postAndNotifyAnchor = document.querySelector(
+  "aside ul li:nth-child(2) a"
+);
+const statusSection = document.querySelector(".listOfDonations");
+const statusAnchor = document.querySelector("aside ul li:nth-child(3) a");
+
+//Observe daily tasks section
+let observerDailyTasks = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.intersectionRatio > 0) {
+      dailyTasksAnchor.classList.add("activeAnchor");
+      //postAndNotifyAnchor.classList.remove("activeAnchor");
+    } else {
+      dailyTasksAnchor.classList.remove("activeAnchor");
+    }
+  });
+});
+
+observerDailyTasks.observe(dailyTasksSection);
+
+//Observe post and notify section
+let postAndNotifyobserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.intersectionRatio > 0) {
+      postAndNotifyAnchor.classList.add("activeAnchor");
+      //dailyTasksAnchor.classList.remove("activeAnchor");
+      //statusAnchor.classList.remove("activeAnchor");
+    } else {
+      postAndNotifyAnchor.classList.remove("activeAnchor");
+    }
+  });
+});
+
+postAndNotifyobserver.observe(postAndNotifySection);
+
+//Observe status section
+let statusObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.intersectionRatio > 0) {
+      statusAnchor.classList.add("activeAnchor");
+      //postAndNotifyAnchor.classList.remove("activeAnchor");
+    } else {
+      statusAnchor.classList.remove("activeAnchor");
+    }
+  });
+});
+
+statusObserver.observe(statusSection);
+
+//////////////  admin page
+/*-------------------------------------------
+Render tasks from database into website 
+--------------------------------------------*/
+let taskList = document.querySelector(".toDoListWrapper");
+
+function renderTask(doc) {
+  let taskDiv = document.createElement("div");
+  let task = document.createElement("span");
+  let taskCheckbox = document.createElement("input");
+  taskCheckbox.type = "checkbox";
+
+  taskDiv.setAttribute("data-id", doc.id);
+  if (doc.data().writer !== "admin") {
+    task.textContent = "From " + doc.data().writer + ": ";
+    task.classList.add("userMessage");
+  }
+  task.textContent += doc.data().task;
+  taskDiv.appendChild(taskCheckbox);
+  taskDiv.appendChild(task);
+  taskList.appendChild(taskDiv);
+
+  //deleting/completing tasks
+
+  taskCheckbox.addEventListener("click", e => {
+    e.stopPropagation();
+    let id = e.target.parentElement.getAttribute("data-id");
+    db.collection("toDoList")
+      .doc(id)
+      .delete();
+  });
+}
+
+/*-------------------------------------------
+                Add to do task
+------------------------------------------*/
+
+const toDoBtn = document.querySelector(".addToDoBtn");
+const toDoInput = document.querySelector(".subsectionToDo input");
+
+toDoBtn.addEventListener("click", e => {
+  e.preventDefault();
+  db.collection("toDoList").add({
+    task: toDoInput.value,
+    writer: "admin",
+    type: "To Do"
+  });
+  toDoInput.value = "";
+});
+
+/*-------------------------------------------
+               live updates
+------------------------------------------*/
+db.collection("toDoList").onSnapshot(snapshot => {
+  let changes = snapshot.docChanges();
+  //console.log(changes);
+  changes.forEach(change => {
+    if (change.type == "added") {
+      renderTask(change.doc);
+    } else if (change.type == "removed") {
+      let taskDiv = taskList.querySelector("[data-id='" + change.doc.id + "']");
+      taskList.removeChild(taskDiv);
+    }
+  });
+});
+
+/*-------------------------------------------
+Post message from admin to notifications panel
+------------------------------------------*/
+
+const adminPostBtn = document.querySelector(".postBtn");
+const adminPostInput = document.querySelector(".writeNotification");
+const notificationForm = document.querySelector("#nofiticationAdmin");
+adminPostBtn.addEventListener("click", e => {
+  console.log("message posted");
+  e.preventDefault();
+  db.collection("notifications").add({
+    text: adminPostInput.value,
+    type: notificationForm.type.value,
+    image: ""
+  });
+  adminPostInput.value = "";
+});

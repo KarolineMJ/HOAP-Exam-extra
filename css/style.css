@@ -18,8 +18,63 @@ main::-webkit-scrollbar,
 body {
   font-family: "Raleway", sans-serif; }
 
-#addPetForm {
-  background-color: lightblue; }
+.hiddenContent {
+  display: none; }
+
+.shownContent {
+  display: block; }
+
+.formWrapper {
+  position: relative; }
+  .formWrapper .feedbackMsg {
+    text-align: right;
+    position: absolute;
+    right: 0;
+    bottom: 20px;
+    width: 100%;
+    height: auto;
+    padding: 0 40px;
+    font-size: 0.8em; }
+
+input:not([type="checkbox"]) {
+  width: 100%;
+  background: none;
+  font-size: 1em;
+  border: 0;
+  border-bottom: 1px solid grey;
+  font-family: inherit;
+  -webkit-appearance: none;
+  border-radius: 0;
+  padding: 0;
+  cursor: text; }
+  input:not([type="checkbox"]):focus {
+    outline: 0;
+    border-bottom: 1px solid #599686; }
+  input:not([type="checkbox"]).inline {
+    width: 5ch; }
+
+input:placeholder-shown + label {
+  cursor: text;
+  max-width: 66.66%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform-origin: left bottom;
+  transform: translate(0, 2.125rem) scale(1.2); }
+
+::-webkit-input-placeholder {
+  opacity: 0;
+  transition: inherit; }
+
+input:not(:placeholder-shown) + label,
+input:focus + label {
+  transition: 0.2s ease all;
+  transform: translate(0, 0) scale(1);
+  cursor: pointer; }
+
+input,
+label {
+  touch-action: manipulation; }
 
 /* -----------------------
         Navbar 
@@ -34,16 +89,12 @@ body {
   grid-template-columns: 1fr 1fr;
   box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77); }
   .navbar img {
-    width: 150px;
-    padding: 18px;
+    height: 60px;
+    padding: 13px;
     fill: #818181;
     align-self: center; }
   .navbar #sidebarBtns {
-    display: none;
     justify-self: end; }
-    .navbar #sidebarBtns img {
-      width: 65px;
-      padding: 13px; }
     .navbar #sidebarBtns #newsBtn {
       margin-right: 10px; }
     .navbar #sidebarBtns #newsBtn,
@@ -66,8 +117,6 @@ body {
     .navbar .darkBtn#signoutAdmin a {
       background-color: white;
       color: #2e2f4b; }
-  .navbar #signoutAdmin {
-    display: none; }
 
 /*------------------------------
 Forms
@@ -80,7 +129,6 @@ button:focus {
 
 #loginForm {
   background-color: white;
-  display: none;
   position: fixed;
   z-index: 10;
   right: 0;
@@ -111,7 +159,7 @@ button:focus {
 #messageForm,
 #imageForm,
 #stuffDonationForm {
-  padding: 40px;
+  padding: 40px 40px 60px 40px;
   color: grey; }
   #loginForm h2,
   #messageForm h2,
@@ -226,7 +274,7 @@ button:focus {
 
 #donationForm,
 #signupForm {
-  padding: 40px; }
+  padding: 40px 40px 60px 40px; }
   #donationForm h2,
   #signupForm h2 {
     margin-bottom: 20px; }
@@ -593,14 +641,14 @@ button:focus {
     border-radius: 30px;
     display: grid;
     margin: 5vw 0 10vw 0;
-    padding: 40px;
+    padding: 40px 40px 60px 40px;
     border-radius: 30px; }
   #frontpageForms #donationForm,
   #frontpageForms #signupForm,
   #sendToUsForms #donationForm,
   #sendToUsForms #signupForm {
     margin: 3vw 10vw 10vw 10vw;
-    padding: 40px;
+    padding: 40px 40px 60px 40px;
     border-radius: 30px; }
 
 #sendToUsForms {
@@ -625,6 +673,8 @@ button:focus {
     margin-bottom: 0px;
     margin-top: 15px;
     width: 100%; }
+  #frontpageForms #donationForm div.formField .whoswName {
+    font-size: 14px; }
   #frontpageForms #donationForm div.formField form button {
     margin-top: 50px;
     margin-bottom: 0px; }
@@ -777,6 +827,8 @@ button:focus {
     height: 100%; }
     #signedInContent #petExpand .memberDonation #donationFormLogginIn h3 {
       padding: 10px; }
+    #signedInContent #petExpand .memberDonation #donationFormLogginIn .timeSlots {
+      padding-bottom: 40px; }
     #signedInContent #petExpand .memberDonation #donationFormLogginIn #donationBtn {
       font-size: 13px;
       font-family: "Raleway", sans-serif;
@@ -857,7 +909,6 @@ button:focus {
 #signedInContent #userSettings,
 #signedInContent #newsFeed {
   color: #717070;
-  display: none;
   box-shadow: 3px 1px 17px 3px rgba(155, 155, 155, 0.68);
   z-index: 3;
   height: calc(100vh - 60px);
@@ -1179,21 +1230,21 @@ Keyframes for border radius header image
 /* -----------------------
         footer 
 ------------------------*/
-#footer {
+footer {
   padding: 50px 10vw;
   color: #ffffff;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  position: relative;
   background-color: #a6bdb7; }
-  #footer h3 {
+  footer > * {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top; }
+  footer h3 {
     margin-bottom: 20px; }
-  #footer .contactInfo {
+  footer .contactInfo {
     margin-bottom: 20px; }
-  #footer .soMeBtn svg {
+  footer .soMeBtn svg {
     fill: #ffffff; }
-
-.visible {
-  display: block !important; }
 
 /* -----------------------
         admin 
@@ -1931,16 +1982,19 @@ Keyframes for border radius header image
         justify-self: center; }
         #lastBox #animalImage div img {
           width: 95px; }
-  #footer .contactBox h3 {
+  footer > * {
+    width: 100%;
+    margin-bottom: 30px; }
+  footer .contactBox h3 {
     font-size: 16px; }
-  #footer .contactBox p {
+  footer .contactBox p {
     font-size: 14.5px; }
-  #footer .contactBox svg {
+  footer .contactBox svg {
     width: 50px;
     height: 50px; }
-  #footer #subscribeForm h3 {
+  footer #subscribeForm h3 {
     font-size: 16px; }
-  #footer #subscribeForm label {
+  footer #subscribeForm label {
     font-size: 13px; } }
 
 @media (max-width: 1100px) {
@@ -1978,7 +2032,7 @@ Keyframes for border radius header image
     #frontpageForms #donationForm,
     #frontpageForms #stuffDonationForm {
       margin: 10vw;
-      padding: 40px; }
+      padding: 40px 40px 60px 40px; }
       #sendToUsForms #messageForm h2,
       #sendToUsForms #imageForm h2,
       #sendToUsForms #signupForm h2,
@@ -2138,32 +2192,32 @@ Keyframes for border radius header image
         justify-self: center; }
         #lastBox #animalImage div img {
           width: 80px; }
-  #footer {
+  footer {
     padding: 30px;
     padding-left: 95px;
-    padding-right: 95px;
-    grid-template-columns: 1fr; }
-    #footer #subscribeForm {
-      grid-row-start: 1; }
-      #footer #subscribeForm h3 {
-        margin-bottom: 10px;
-        font-size: 17px; }
-      #footer #subscribeForm input {
-        width: 90%; }
-      #footer #subscribeForm label {
-        font-size: 15px; }
-      #footer #subscribeForm button {
-        height: 40px;
-        margin-right: 30px; }
-    #footer .contactBox {
+    padding-right: 95px; }
+    footer > * {
+      width: 100%;
+      margin-bottom: 30px; }
+    footer #subscribeForm h3 {
+      margin-bottom: 10px;
+      font-size: 17px; }
+    footer #subscribeForm input {
+      width: 90%; }
+    footer #subscribeForm label {
+      font-size: 15px; }
+    footer #subscribeForm button {
+      height: 40px;
+      margin-right: 30px; }
+    footer .contactBox {
       grid-gap: 5px;
       padding-top: 15px; }
-      #footer .contactBox h3 {
+      footer .contactBox h3 {
         margin-bottom: 10px;
         font-size: 17px; }
-      #footer .contactBox p {
+      footer .contactBox p {
         font-size: 16px; }
-      #footer .contactBox svg {
+      footer .contactBox svg {
         width: 50px;
         height: 50px; } }
 
@@ -2180,6 +2234,7 @@ Keyframes for border radius header image
       width: 100%; }
   #signedInContent #userSettings,
   #signedInContent #newsFeed {
+    display: block;
     width: 100vw;
     padding: 50px;
     padding-bottom: 100px; }
@@ -2194,9 +2249,6 @@ Keyframes for border radius header image
       width: 50px; }
   #signedInContent #yourPets #animalBox #animalViewBox {
     width: 174px; }
-  #newsBtn,
-  #settingBtn {
-    display: none; }
   #mobileMenu {
     background-color: white;
     z-index: 3;
@@ -2321,7 +2373,6 @@ Keyframes for border radius header image
       #intro .introText .catchphrase {
         text-align: center; }
         #intro .introText .catchphrase h1 {
-          padding-top: 65px;
           font-size: 10vw; }
           #intro .introText .catchphrase h1 span {
             font-size: 15vw; }
@@ -2410,26 +2461,26 @@ Keyframes for border radius header image
         #lastBox #animalImage div img {
           width: 70px;
           border-radius: 50%; }
-  #footer {
-    padding: 30px 10vw 100px 10vw;
-    grid-template-columns: 1fr; }
-    #footer #subscribeForm {
-      grid-row-start: 1; }
-      #footer #subscribeForm h3 {
-        margin-bottom: 10px;
-        font-size: 15px; }
-      #footer #subscribeForm label {
-        font-size: 13px; }
-      #footer #subscribeForm button {
-        height: 30px; }
-    #footer .contactBox {
+  footer {
+    padding: 30px 10vw 100px 10vw; }
+    footer > * {
+      width: 100%;
+      margin-bottom: 30px; }
+    footer #subscribeForm h3 {
+      margin-bottom: 10px;
+      font-size: 15px; }
+    footer #subscribeForm label {
+      font-size: 13px; }
+    footer #subscribeForm button {
+      height: 30px; }
+    footer .contactBox {
       padding-top: 15px; }
-      #footer .contactBox h3 {
+      footer .contactBox h3 {
         margin-bottom: 10px;
         margin-top: 10px;
         font-size: 15px; }
-      #footer .contactBox p {
+      footer .contactBox p {
         font-size: 14px; }
-      #footer .contactBox svg {
+      footer .contactBox svg {
         width: 50px;
         height: 50px; } }

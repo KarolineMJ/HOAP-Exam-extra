@@ -15,18 +15,18 @@
     <div class="navbar">
       <img src="img/hoap-logo-01.svg" alt="HOAP logo">
 
-      <div class="darkBtn" id="alreadyMemberBtn">
+      <div class="darkBtn frontpageContent" id="alreadyMemberBtn">
         <a href="#">Already a member?</a>
       </div>
 
-      <div class="darkBtn" id="signoutAdmin"><a href="#">Sign out</a></div>
-      <div id="sidebarBtns">
+      <div class="darkBtn adminContent" id="signoutAdmin"><a href="#">Sign out</a></div>
+      <div class="userContent hiddenContent" id="sidebarBtns">
 
         <img src="img/user.svg" alt="user icon" id="settingBtn">
         <img src="img/paw.svg" alt="news icon" id="newsBtn">
       </div>
     </div>
-    <div id="loginForm">
+    <div class="hiddenContent formWrapper" id="loginForm">
       <h2>Sign in</h2>
       <form>
         <div class="formField">
@@ -45,9 +45,10 @@
 
         <button type="submit" id="signinButton">Sign in</button>
       </form>
+      <div class="feedbackMsg"></div>
     </div>
 
-    <div id="frontpageContent">
+    <div class="frontpageContent" id="frontpageContent">
       <div id="intro">
         <div class="introText">
           <div class="catchphrase">
@@ -435,7 +436,7 @@
           </div>
         </div>
         <div id="frontpageForms">
-          <div id="donationForm">
+          <div id="donationForm" class="formWrapper">
             <h2>One-time donation</h2>
             <p>* You can pick one or both *</p>
             <form id="oneTimeDonation">
@@ -447,7 +448,7 @@
               <div class="pickUpBox">
                 <input type="checkbox" id="pickUp" name="pickup"/>
                 <label for="pickUp">Want us to pick it up?</label>
-                <input type="number" placeholder="ZIP" min="300" max="9999" name="postNr">
+                <label><input type="number" placeholder="ZIP" min="300" max="9999" name="postNr"></label>
               </div>
               
               <div class="formField">
@@ -455,14 +456,15 @@
                 <label for="donateHowMuch">How much</label>
               </div>
               <div class="formField">
-              <input type="text" id="donateWho" placeholder="In whose name" name="inWhoseName" />
+               <input type="text" id="donateWho" placeholder="In whose name" name="inWhoseName" />
                 <label class="whoswName" for="donateWho">In whose name</label>
               </div>
 
               <button type="submit">Donate</button>
             </form>
+            <div class="feedbackMsg"></div>
           </div>
-          <div id="signupForm">
+          <div id="signupForm"  class="formWrapper">
             <h2>Sign up as member</h2>
             <form>
               <div class="formField">
@@ -479,12 +481,13 @@
               </div>
               <button id="signupBtn" type="submit">Sign up</button>
             </form>
+            <div class="feedbackMsg"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div id="signedInContent">
+    <div class="userContent" id="signedInContent">
       <div class="signedInContainer">
         <div id="yourPets">
          
@@ -521,7 +524,7 @@
       <div id="petExpand">
       </div>
 
-        <div id="userSettings">
+        <div class="hiddenContent" id="userSettings">
           <div class="user">
             <p>Hi <span class="userName"></span></p>
             <img src="img/john.jpg" alt="person" />
@@ -592,8 +595,7 @@
           </div>
           <button id="cancelMembership">Cancel membership</button>
         </div>
-      <div id="newsFeed">
-        
+      <div class="hiddenContent" id="newsFeed">
       </div>
 
       <div id="aboutLoggedIn">
@@ -603,7 +605,7 @@
       </div>
 
       <div id="sendToUsForms" >
-        <div id="messageForm">
+        <div id="messageForm" class="formWrapper">
           <h2>Send us a message</h2>
           <form>
             <div class="formField">
@@ -612,8 +614,9 @@
             </div>
             <button type="submit">Send</button>
           </form>
+          <div class="feedbackMsg"></div>
         </div>
-        <div id="stuffDonationForm">
+        <div id="stuffDonationForm" class="formWrapper">
           <h2>Donate some stuff</h2>
           <form>
               <div class="formField">
@@ -626,8 +629,9 @@
                 </div>  
                 <button type="submit">Donate</button>
           </form>
+          <div class="feedbackMsg"></div>
         </div>
-        <div id="imageForm">
+        <div id="imageForm" class="formWrapper">
           <h2>Send us an image</h2>
           <form>
             <!-- <div class="formField">
@@ -643,6 +647,7 @@
             </div>
             <button type="submit">Send</button>
           </form>
+          <div class="feedbackMsg"></div>
         </div>
       </div>
 
@@ -655,7 +660,6 @@
           <svg
           id="newsMenu"
           version="1.1"
-          id="newsButtonSvg"
           xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
           x="0px"
@@ -715,7 +719,6 @@
           <svg
             id="settingMenu"
             version="1.1"
-            id="Layer_1"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px"
@@ -742,7 +745,7 @@
       </div>
     </div>
 
-    <div id="admin">
+    <div class="adminContent" id="admin">
       <aside>
     
         <ul>
@@ -933,8 +936,7 @@
                 <p><input type="checkbox" name="young"><label>Young animal</label></p>
                 <p><input type="checkbox" name="pregnant"><label>Pregnant </label></p>
                 <p><label><input type="text" placeholder="extra attention" name="extra"></label></p>
-                <div><input type="file" id="uploadBtnAdmin">
-                <label for="uploadBtnAdmin"><input type="file" name="filename"></label></div>
+                <div><label for="uploadBtnAdmin">Upload file<input type="file" id="uploadBtnAdmin"></label></div>
                 <button type="submit" class="addAnimalToDB">Add Animal</button>
               </form>
             </div>
@@ -1009,7 +1011,7 @@
               <hr>
               <p>Result: <span class="result"></span></p>
               <hr>
-              <i><p class="hint"></p></i>
+              <p class="hint"><i></i></p>
               <p>Fake saving: 50000 kr. including real one-time-donations of <span class="donationGain"></span> kr. </p>
               
             </div>
@@ -1057,7 +1059,7 @@
         </div>
       </main>
     </div>
-    <div id="footer">
+    <footer class="frontpageContent userContent">
       <div class="contactBox">
         <h3>Contact info</h3>
         <div class="contactInfo">
@@ -1069,8 +1071,7 @@
           <img src="img/facebook.svg" alt="facebook icon">
           <img src="img/instagram.svg" alt="instagram icon">
         </div>
-      </div>
-      <div id="subscribeForm">
+      </div><div id="subscribeForm">
         <h3>Subscribe to our monthly newsletter</h3>
         <form>
           <div class="formField">
@@ -1080,7 +1081,7 @@
           <button type="submit">Subscribe</button>
         </form>
       </div>
-    </div>
+    </footer>
 
     <div id="preferencesModal" class="modal">
         <div class="modalContent">
@@ -1203,19 +1204,18 @@
           <div>
             <p>
             <label>I'd like to donate 
-            <input type="number" name="moneyAmount"  min="0"> kr,-</label>
+            <input type="number" name="moneyAmount"  min="0" class="inline"> kr,-</label>
           </p>
-          <hr>
         </div>
-          <div class="timeSlots">
+          <div class="timeSlots formWrapper">
               <p>Pick a time you'd like to spend with this furry monster:</p>
               <p><input type="date" name="date"></p>
-              <p><label class="morning"><input type="checkbox" name="morning" value="morning">Morning</label></p>
+              <p><label class="morning"><input type="checkbox" name="morning" value="morning"> Morning</label></p>
               <p>
-            <label class="afternoon"><input type="checkbox" name="afternoon" value="afternoon">Afternoon</label></p>
-            <p><label class="evening"><input type="checkbox" name="evening" value="evening">Evening</label></p>
-            <p><label class="training"><input type="checkbox" name="traning" value="traning">Training</label></p>
-            <hr>
+            <label class="afternoon"><input type="checkbox" name="afternoon" value="afternoon"> Afternoon</label></p>
+            <p><label class="evening"><input type="checkbox" name="evening" value="evening"> Evening</label></p>
+            <p><label class="training"><input type="checkbox" name="traning" value="traning"> Training</label></p>
+            <div class="feedbackMsg"></div>
           </div>
           <input type="submit" value="I'm in" id="donationBtn" />
         </form>
@@ -1223,7 +1223,7 @@
     </template>
     <script src="https://www.gstatic.com/firebasejs/5.6.0/firebase.js"></script>
     <script src="js/frontpage.js"></script>
-    <script src="js/menu.js"></script>
+    <!-- <script src="js/menu.js"></script> -->
     <script
       type="text/javascript"
       src="https://www.gstatic.com/charts/loader.js"

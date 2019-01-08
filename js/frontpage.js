@@ -3,22 +3,36 @@
 /*-----------------------------------------
 Elements for HTML 
 ----------------------------------------*/
+
 const animalListOnLoggedIn = document.querySelector("#animalList");
 const eachAnimalTemp = document.querySelector("#eachAnimalTemp").content;
 const petExpand = document.querySelector("#petExpand");
 const adminSection = document.querySelector("#admin");
+const newsFeedPanel = document.querySelector("#newsFeed");
 const userSettingPanel = document.querySelector("#userSettings");
+const donationStatus = document.querySelector("#donationStatus");
 const userSettingForm = userSettingPanel.querySelector("form");
 const oneTimeDonationForm = document.querySelector("#oneTimeDonation");
+const signupForm = document.querySelector("#signupForm");
 const subscribeForm = document.querySelector("#subscribeForm form");
 const messageForm = document.querySelector("#messageForm form");
-const newsFeedPanel = document.querySelector("#newsFeed");
 const prefModal = document.querySelector("#preferencesModal");
 const preferenceForm = document.querySelector("#preferencesModal form");
 const cancelMembershipBtn = document.querySelector("#cancelMembership");
 const detailedAnimalTemp = document.querySelector("#detailedAnimalTemp")
   .content;
 const donationTemp = document.querySelector("#memberDonation").content;
+/////////////////////////////
+const frontpageContentS = document.querySelectorAll(".frontpageContent");
+const userContentS = document.querySelectorAll(".userContent");
+const adminContentS = document.querySelectorAll(".adminContent");
+const closeByDefaultContents = document.querySelectorAll(".closeByDefault");
+/////////////////////////////
+let alreadyMemberBtn = document.querySelector("#alreadyMemberBtn");
+let loginForm = document.querySelector("#loginForm");
+const signoutAdminBtn = document.querySelector("#signoutAdmin");
+const signOutButton = document.querySelector("#signOut");
+const stuffDonationForm = document.querySelector("#stuffDonationForm form");
 
 /*-------------------------------------------
 Initialize Firebase
@@ -45,184 +59,102 @@ let storageReference = storage.ref();
 /*-------------------------------------------
 Start
 ------------------------------------------*/
-
 window.addEventListener("DOMContentLoaded", init);
-
 function init() {
-  newsFeedPanel.innerHTML = "";
+  // Display right content based on if user is logged in and if user is admin
+  pickContent();
+  // listen to user actions
+  addStaticListeners();
+}
 
-  signinButton.addEventListener("click", signinUser);
-  signupBtn.addEventListener("click", signupUser);
-  alreadyMemberBtn.addEventListener("click", openSigninForm);
-
-  /*-------------------------------------------
-Display right content if user
-------------------------------------------*/
-
-  const frontpageContent = document.querySelector("#frontpageContent");
-  const signedInContent = document.querySelector("#signedInContent");
-  const memberBtns = document.querySelector("#sidebarBtns");
-  const signoutAdminBtn = document.querySelector("#signoutAdmin");
-  const signOutButton = document.querySelector("#signOut");
-  const footer = document.querySelector("#footer");
-
-  // check if a user session already exist, if yes, show content that matches this user
-  // use as medium to pass info with page reload, since there's no AuthStateChange, the current code using onAuthStateChanged won't fire with page reload and therefore will lose the current user info which affects the user setting panel and the notifications
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+function pickContent() {
+  //// with firebase Auth
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user && user.email === "admin@admin.com") {
+      // display relevant content when admin is logged in
+      hideArrayElements(frontpageContentS);
+      hideArrayElements(userContentS);
+      showArrayElements(adminContentS);
+      // get relevant user data
+      displayAnimals();
+    } else if (user) {
+      // display relevant content for logged in user
+      hideArrayElements(frontpageContentS);
+      hideArrayElements(adminContentS);
+      hideArrayElements(closeByDefaultContents);
+      showArrayElements(userContentS);
+    } else {
+      // display relevant content when no user is logged in
+      hideArrayElements(adminContentS);
+      hideArrayElements(userContentS);
+      showArrayElements(frontpageContentS);
+    }
+  });
+  //// with browser session
+  //// use session as a medium to pass info with page reload
+  //// signin and signup will lead to startUserSession
   if (window.sessionStorage.getItem("userEmail")) {
     const currentUserEmail = window.sessionStorage.getItem("userEmail");
     getUserSetting(currentUserEmail);
+    getUserNewsfeed(currentUserEmail);
     getUserDonationSofar(currentUserEmail);
-    //    getUserNotifications(currentUserEmail);
+    getUserAnimals(currentUserEmail);
   }
-  // detect user state change and display different content based on what type of user is logged in
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user && user.email === "admin@admin.com") {
-      displayAnimals();
-      adminSection.style.display = "block";
-      frontpageContent.style.display = "none";
-      signedInContent.style.display = "none";
-      signinForm.style.display = "none";
-      alreadyMemberBtn.style.display = "none";
-      memberBtns.style.display = "none";
-      signoutAdminBtn.style.display = "block";
-      footer.style.display = "none";
-    } else if (user) {
-      adminSection.style.display = "none";
-      frontpageContent.style.display = "none";
-      signedInContent.style.display = "block";
-      signinForm.style.display = "none";
-      alreadyMemberBtn.style.display = "none";
-      memberBtns.style.display = "block";
-      signoutAdminBtn.style.display = "none";
-      //      buildAnimalListOnLoggedinPage();
-      getUserAnimals(user.email);
-      getUserSetting(user.email);
-      getUserNotifications(user.email);
-      getUserDonationSofar(user.email);
-    } else {
-      adminSection.style.display = "none";
-      frontpageContent.style.display = "block";
-      signedInContent.style.display = "none";
-      alreadyMemberBtn.style.display = "block";
-      memberBtns.style.display = "none";
-      signoutAdminBtn.style.display = "none";
-      footer.style.display = "grid";
-    }
+}
+
+function addStaticListeners() {
+  // user interaction on logged-in page
+  const settingBtn = document.querySelector("#settingBtn");
+  const newsBtn = document.querySelector("#newsBtn");
+  settingBtn.addEventListener("click", () => {
+    getUserDonationSofar(window.sessionStorage.getItem("userEmail"));
+    toggleElements(userSettingPanel, newsFeedPanel);
+  });
+  newsBtn.addEventListener("click", () => {
+    toggleElements(newsFeedPanel, userSettingPanel);
+  });
+  cancelMembershipBtn.addEventListener("click", cancelMembership);
+  messageForm.addEventListener("submit", sendMessage);
+  stuffDonationForm.addEventListener("submit", stuffDonate);
+
+  // user interaction on frontpage
+  alreadyMemberBtn.addEventListener("click", e => {
+    e.preventDefault();
+    toggleElements(loginForm);
   });
 
+  const signinEmail = document.querySelector("#signinEmail");
+  const signinPassword = document.querySelector("#signinPassword");
+  const signinButton = document.querySelector("#signinButton");
+  signinButton.addEventListener("click", signinUser);
+
+  const signupName = document.querySelector("#signupName");
+  const signupPassword = document.querySelector("#signupPassword");
+  const signupEmail = document.querySelector("#signupEmail");
+  const signupBtn = document.querySelector("#signupBtn");
+  signupBtn.addEventListener("click", signupUser);
   signoutAdminBtn.addEventListener("click", signout);
   signOutButton.addEventListener("click", signout);
 
-  /*-------------------------------------------
-Render tasks from database into website 
---------------------------------------------*/
-  let taskList = document.querySelector(".toDoListWrapper");
-
-  function renderTask(doc) {
-    let taskDiv = document.createElement("div");
-    let task = document.createElement("span");
-    let taskCheckbox = document.createElement("input");
-    taskCheckbox.type = "checkbox";
-
-    taskDiv.setAttribute("data-id", doc.id);
-    if (doc.data().writer !== "admin") {
-      task.textContent = "From " + doc.data().writer + ": ";
-      task.classList.add("userMessage");
-    }
-    task.textContent += doc.data().task;
-    taskDiv.appendChild(taskCheckbox);
-    taskDiv.appendChild(task);
-    taskList.appendChild(taskDiv);
-
-    //deleting/completing tasks
-
-    taskCheckbox.addEventListener("click", e => {
-      e.stopPropagation();
-      let id = e.target.parentElement.getAttribute("data-id");
-      db.collection("toDoList")
-        .doc(id)
-        .delete();
-    });
-  }
-
-  /*-------------------------------------------
-                Add to do task
-------------------------------------------*/
-
-  const toDoBtn = document.querySelector(".addToDoBtn");
-  const toDoInput = document.querySelector(".subsectionToDo input");
-
-  toDoBtn.addEventListener("click", e => {
-    e.preventDefault();
-    db.collection("toDoList").add({
-      task: toDoInput.value,
-      writer: "admin",
-      type: "To Do"
-    });
-    toDoInput.value = "";
-  });
-
-  /*-------------------------------------------
-               live updates
-------------------------------------------*/
-  db.collection("toDoList").onSnapshot(snapshot => {
-    let changes = snapshot.docChanges();
-    //console.log(changes);
-    changes.forEach(change => {
-      if (change.type == "added") {
-        renderTask(change.doc);
-      } else if (change.type == "removed") {
-        let taskDiv = taskList.querySelector(
-          "[data-id='" + change.doc.id + "']"
-        );
-        taskList.removeChild(taskDiv);
-      }
-    });
-  });
+  oneTimeDonationForm.addEventListener("submit", onetimeDonation);
+  subscribeForm.addEventListener("submit", subscribe);
 }
 
-/*-------------------------------------------
-Post message from admin to notifications panel
-------------------------------------------*/
-
-const adminPostBtn = document.querySelector(".postBtn");
-const adminPostInput = document.querySelector(".writeNotification");
-const notificationForm = document.querySelector("#nofiticationAdmin");
-adminPostBtn.addEventListener("click", e => {
-  console.log("message posted");
-  e.preventDefault();
-  db.collection("notifications").add({
-    text: adminPostInput.value,
-    type: notificationForm.type.value,
-    image: ""
-  });
-  adminPostInput.value = "";
-});
-/*-------------------------------------------
-Display signin form
-------------------------------------------*/
-
-let alreadyMemberBtn = document.querySelector("#alreadyMemberBtn");
-let signinForm = document.querySelector("#loginForm");
-
-function openSigninForm() {
-  if (signinForm.style.display == "block") {
-    signinForm.style.display = "none";
-  } else {
-    signinForm.style.display = "block";
-  }
+function startUserSession(email) {
+  window.sessionStorage.setItem("userEmail", email);
+  newsFeedPanel.innerHTML = "";
+  resetForm(userSettingForm);
+  clearContent(donationStatus);
+  getUserSetting(email);
+  getUserDonationSofar(email);
+  getUserNewsfeed(email);
+  getUserAnimals(email);
 }
 
 /*------------------------------------------
-sign in user
-------------------------------------------*/
-
-//const for signin
-const signinEmail = document.querySelector("#signinEmail");
-const signinPassword = document.querySelector("#signinPassword");
-const signinButton = document.querySelector("#signinButton");
-
-//sign in a new user
+functions related to Firebase authentication
+-------------------------------------------*/
 
 function signinUser(e) {
   e.preventDefault();
@@ -230,26 +162,17 @@ function signinUser(e) {
     .auth()
     .signInWithEmailAndPassword(signinEmail.value, signinPassword.value)
     .then(() => {
-      // keep current user in browser session so that the user is kept with page reload
-      window.sessionStorage.setItem("userEmail", signinEmail.value);
-      const currentUserEmail = window.sessionStorage.getItem("userEmail");
-      resetForm(userSettingForm);
-      getUserSetting(currentUserEmail);
-      getUserDonationSofar(currentUserEmail);
-      // getUserNotifications(currentUserEmail);
-      getUserAnimals(currentUserEmail);
+      toggleElements(loginForm);
+      startUserSession(signinEmail.value);
     })
     .catch(function(error) {
-      console.log(error);
+      if (String(error).indexOf("password") > -1) {
+        showFeedback(loginForm, "Wrong password, try again~", "red");
+      } else if (String(error).indexOf("user record") > -1) {
+        showFeedback(loginForm, "Seems like you haven't signed up yet", "red");
+      }
     });
 }
-/*-------------------------------------------
-Sign up user
-------------------------------------------*/
-const signupName = document.querySelector("#signupName");
-const signupPassword = document.querySelector("#signupPassword");
-const signupEmail = document.querySelector("#signupEmail");
-const signupBtn = document.querySelector("#signupBtn");
 
 function signupUser(e) {
   e.preventDefault();
@@ -261,20 +184,22 @@ function signupUser(e) {
     .then(() => {
       // show preference popup and hide other panels
       showElement(prefModal);
-      hideElement(userSettingPanel);
-      hideElement(newsFeedPanel);
       window.sessionStorage.setItem("userEmail", signupEmail.value);
       const currentUserEmail = window.sessionStorage.getItem("userEmail");
       preferenceSetting(currentUserEmail);
     })
     .catch(function(error) {
-      console.log(error);
+      if (String(error).indexOf("already") > -1) {
+        showFeedback(
+          signupForm,
+          "Looks like the owner of this email has already joined us.",
+          "white"
+        );
+      } else {
+        console.log(error);
+      }
     });
 }
-
-/*-------------------------------------------
-Signout user
-------------------------------------------*/
 
 function signout() {
   firebase
@@ -283,6 +208,7 @@ function signout() {
     .then(function() {
       console.log("Succesfull logout");
       window.sessionStorage.removeItem("userEmail");
+      toggleElements(userSettings);
     })
     .catch(function(error) {
       // An error happened.
@@ -290,116 +216,82 @@ function signout() {
     });
 }
 
-/*-------------------------------------------
-Upload an image to database
-------------------------------------------*/
-
-//get elements
-const uploader = document.querySelector("#uploader");
-const fileButton = document.querySelector("#fileButton");
-
-//listen for file selection
-
-fileButton.addEventListener("change", function(e) {
-  //get file
-  let file = e.target.files[0];
-
-  // document.querySelector('input[type="file"]').value.split(/(\\|\/)/g).pop();
-  //https://forums.asp.net/t/2027451.aspx?How%20to%20get%20file%20name%20selected%20in%20input%20type%20file%20&fbclid=IwAR1q1NmUJszE3bNt4Pn9tbY068Q9x4A2Ar2sWA39Tep5CUrpY2FdiTh5DA8
-
-  //create a storage ret
-  let storageRef = firebase.storage().ref("member/" + file.name);
-
-  //upload file
-  let task = storageRef.put(file);
-
-  // update progress bar
-  task.on(
-    "state_changed",
-    function progress(snapshot) {
-      let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-    },
-    function error(err) {},
-    function complete() {
-      console.log("picture is uploaded");
-    }
-  );
-});
-
-/*--------------------------------------
-Add data to expand & open expands
--------------------------------------*/
-
-function cloneAnimalInfo(data, animalID) {
-  const src = document
-    .querySelector(`.eachAnimal[data-id="${animalID}"] img`)
-    .getAttribute("src");
-  petExpand.innerHTML = "";
-  const clone = detailedAnimalTemp.cloneNode(true);
-  clone.querySelector(".bigAnimalImage img").setAttribute("src", src);
-  clone.querySelector(".animalName").textContent = data.name;
-  clone.querySelector(".animalBreed").textContent = data.breed;
-  clone.querySelector(".animalAge").textContent = data.age;
-  clone.querySelector(".animalGender").textContent = data.gender;
-  clone.querySelector(".animalSize").textContent = data.size;
-  if (!data.young) {
-    clone.querySelector(".animalPup").style.display = "none";
-  }
-  if (!data.pregnant) {
-    clone.querySelector(".animalPregnant").style.display = "none";
-  }
-  clone.querySelector(".animalStory").textContent = data.story;
-  clone.querySelector(".money").textContent = data.money;
-  clone.querySelector(".name").textContent = data.name;
-  // append the donation section of this animal
-  let donationClone = donationTemp.cloneNode(true);
-  donationClone.querySelector("form").setAttribute("data-id", animalID);
-  const donationForm = donationClone.querySelector("form");
-  const morning = donationClone.querySelector("label.morning");
-  const afternoon = donationClone.querySelector("label.afternoon");
-  const evening = donationClone.querySelector("label.evening");
-  const training = donationClone.querySelector("label.training");
-  // need to read db to get needed time slots
-  db.collection("dailyTaskTemplate")
-    .where("animalID", "==", animalID)
-    .get()
-    .then(res => {
-      res.forEach(entry => {
-        if (entry.data().morning === false) {
-          morning.classList.add("crossout");
-          morning.querySelector("input").setAttribute("disabled", "disabled");
-        }
-        if (entry.data().afternoon === false) {
-          afternoon.classList.add("crossout");
-          afternoon.querySelector("input").setAttribute("disabled", "disabled");
-        }
-        if (entry.data().evening === false) {
-          evening.classList.add("crossout");
-          evening.querySelector("input").setAttribute("disabled", "disabled");
-        }
-        if (entry.data().training === false) {
-          training.classList.add("crossout");
-          training.querySelector("input").setAttribute("disabled", "disabled");
-        }
-      });
-    });
-  donationForm.addEventListener("submit", donate);
-
-  petExpand.appendChild(clone);
-  petExpand.appendChild(donationClone);
-  const closeExpandBtn = document.querySelector(".closeExpandBtn");
-
-  const triangleUp = document.querySelectorAll(".triangleUp");
-
-  closeExpandBtn.addEventListener("click", () => {
-    petExpand.style.display = "none";
-    hideArrayElements(triangleUp);
+function preferenceSetting(email) {
+  // sync donation value text when user adjust range bar
+  syncNrWithRange(preferenceForm, preferenceForm.querySelector(".donationNr"));
+  // submit form in 2 ways
+  const submitPrefBtn = document.querySelector("#submitPrefBtn");
+  const skipPrefBtn = document.querySelector("#skipPrefBtn");
+  preferenceForm.addEventListener("submit", sendPreferenceToDatabase);
+  skipPrefBtn.addEventListener("click", () => {
+    sendPreferenceToDatabase();
+    hideElement(prefModal);
   });
 }
+/*-----------------------------------------------------------
+functions that write(POST,UPDATE,DELETE) to Firebase database
+------------------------------------------------------------*/
 
-function donate(e) {
-  e.preventDefault();
-  const donationSubmitForm = document.querySelector("#donationFormLogginIn");
+function sendPreferenceToDatabase(e) {
+  if (e) {
+    e.preventDefault();
+  }
+  // get current user email
+  let email = window.sessionStorage.getItem("userEmail");
+  // get values from preference form
+  const nickname = preferenceForm.nickname.value;
+  const catBol = preferenceForm.cat.checked ? true : false;
+  const dogBol = preferenceForm.dog.checked ? true : false;
+  const maleBol = preferenceForm.male.checked ? true : false;
+  const femaleBol = preferenceForm.female.checked ? true : false;
+  const smallBol = preferenceForm.small.checked ? true : false;
+  const mediumBol = preferenceForm.medium.checked ? true : false;
+  const largeBol = preferenceForm.large.checked ? true : false;
+  const pupBol = preferenceForm.pup.checked ? true : false;
+  const pregnantBol = preferenceForm.pregnant.checked ? true : false;
+  const errandBol = preferenceForm.errand.checked ? true : false;
+  const newcomingBol = preferenceForm.newComming.checked ? true : false;
+  const monthlyDonation = preferenceForm.monthlyDonation.value;
+
+  // add user to db with the values
+  db.collection("member")
+    .add({
+      email: email,
+      nickname: nickname,
+      permission: "none",
+      seeCat: catBol,
+      seeDog: dogBol,
+      seeMale: maleBol,
+      seeFemale: femaleBol,
+      seeSmall: smallBol,
+      seeMedium: mediumBol,
+      seeLarge: largeBol,
+      seePup: pupBol,
+      seePregnant: pregnantBol,
+      notifyErrand: errandBol,
+      notifyNewcoming: newcomingBol,
+      monthlyDonation: monthlyDonation,
+      following: []
+    })
+    .then(() => {
+      startUserSession(email);
+      // window.sessionStorage.setItem("userEmail", email);
+      // resetForm(userSettingForm);
+      // clearContent(donationStatus);
+      // getUserSetting(email);
+      // getUserDonationSofar(email);
+      // getUserNotifications(email);
+      // getUserAnimals(email);
+    });
+  // hide modal without waiting for db success
+  hideElement(prefModal);
+}
+
+// function updatePreferenceToDatabase() {
+//   console.log("update user preferences");
+// }
+
+function memberDonate(donationSubmitForm) {
   const animalID = donationSubmitForm.dataset.id;
   const moneyAmount = donationSubmitForm.moneyAmount.value;
   const date = donationSubmitForm.date.value;
@@ -457,7 +349,11 @@ function donate(e) {
               userEmail: userEmail,
               time: workingTimes
             })
-            .then(console.log("time registered"));
+            .then(() => {
+              const wrapper = document.querySelector(".timeSlots");
+              showFeedback(wrapper, "Thank you ~", "#c18e63");
+              console.log("time registered");
+            });
         } else {
           db.collection("timeDonation")
             .doc(res.docs[0].id)
@@ -470,7 +366,11 @@ function donate(e) {
                 .update({
                   time: sumSofar
                 })
-                .then(console.log("time counted up"));
+                .then(() => {
+                  const wrapper = document.querySelector(".timeSlots");
+                  showFeedback(wrapper, "Thank you ~", "#c18e63");
+                  console.log("time counted up");
+                });
             });
         }
       });
@@ -489,9 +389,12 @@ function donate(e) {
               animalID: animalID
             })
             .then(() => {
-              console.log("money donated");
+              const wrapper = document.querySelector(".timeSlots");
+              showFeedback(wrapper, "Thank you ~", "#c18e63");
             });
         } else {
+          const wrapper = document.querySelector(".timeSlots");
+          showFeedback(wrapper, "Thank you ~", "#c18e63");
           console.log("already donated before, will update sum");
           res.forEach(doc => {
             let sum = Number(doc.data().amount);
@@ -505,73 +408,6 @@ function donate(e) {
         }
       });
   }
-}
-
-/*************************************
- * user interaction
- *************************************/
-cancelMembershipBtn.addEventListener("click", cancelMembership);
-messageForm.addEventListener("submit", sendMessage);
-oneTimeDonationForm.addEventListener("submit", onetimeDonation);
-subscribeForm.addEventListener("submit", subscribe);
-
-/*************************************
- * functions that write(POST,UPDATE,DELETE) to database
- *************************************/
-
-function sendPreferenceToDatabase(e) {
-  if (e) {
-    e.preventDefault();
-  }
-  // get current user email
-  let email = window.sessionStorage.getItem("userEmail");
-  // get values from preference form
-  const nickname = preferenceForm.nickname.value;
-  const catBol = preferenceForm.cat.checked ? true : false;
-  const dogBol = preferenceForm.dog.checked ? true : false;
-  const maleBol = preferenceForm.male.checked ? true : false;
-  const femaleBol = preferenceForm.female.checked ? true : false;
-  const smallBol = preferenceForm.small.checked ? true : false;
-  const mediumBol = preferenceForm.medium.checked ? true : false;
-  const largeBol = preferenceForm.large.checked ? true : false;
-  const pupBol = preferenceForm.pup.checked ? true : false;
-  const pregnantBol = preferenceForm.pregnant.checked ? true : false;
-  const errandBol = preferenceForm.errand.checked ? true : false;
-  const newcomingBol = preferenceForm.newComming.checked ? true : false;
-  const monthlyDonation = preferenceForm.monthlyDonation.value;
-
-  // add user to db with the values
-  db.collection("member")
-    .add({
-      email: email,
-      nickname: nickname,
-      permission: "none",
-      seeCat: catBol,
-      seeDog: dogBol,
-      seeMale: maleBol,
-      seeFemale: femaleBol,
-      seeSmall: smallBol,
-      seeMedium: mediumBol,
-      seeLarge: largeBol,
-      seePup: pupBol,
-      seePregnant: pregnantBol,
-      notifyErrand: errandBol,
-      notifyNewcoming: newcomingBol,
-      monthlyDonation: monthlyDonation,
-      following: []
-    })
-    .then(() => {
-      getUserSetting(email);
-      getUserNotifications(email);
-      getUserAnimals(email);
-      getUserDonationSofar(email);
-    });
-  // hide modal without waiting for db success
-  hideElement(prefModal);
-}
-
-function updatePreferenceToDatabase() {
-  console.log("update user preferences");
 }
 
 function cancelMembership() {
@@ -606,43 +442,88 @@ function sendMessage(e) {
         type: "user",
         writer: user
       })
-      .then(console.log("message sent"));
+      .then(() => {
+        resetForm(messageForm);
+        showFeedback(messageForm.parentElement, "Got it~", "#c18e63");
+        console.log("message sent");
+      });
   }
 }
 
 function onetimeDonation(e) {
   e.preventDefault();
-  console.log("one time donation");
   const stuff = oneTimeDonationForm.donateWhat.value;
   const postNr = oneTimeDonationForm.postNr.value;
   const pickup = oneTimeDonationForm.pickup.checked;
   const onetimeMoney = oneTimeDonationForm.onetimeMoney.value;
   const inWhoseName = oneTimeDonationForm.inWhoseName.value;
   // if user choose pick up, then this entry shows up in errands
-  if (stuff !== "" && pickup === true && postNr !== "") {
-    db.collection("stuffDonation").add({
-      stuff: stuff,
-      postNr: postNr
-    });
-    const errandsDesc = `Pick up a ${stuff} from ${postNr}`;
-    db.collection("notifications").add({
-      text: errandsDesc,
-      type: "errands"
-    });
+  if (stuff !== "" && pickup === true && !postNr) {
+    showFeedback(
+      donationForm,
+      "Don't forget to tell us from which ZIP should we pick it up",
+      "white"
+    );
+  } else if (stuff !== "" && pickup === true && postNr !== "") {
+    db.collection("stuffDonation")
+      .add({
+        stuff: stuff,
+        postNr: postNr
+      })
+      .then(() => {
+        resetForm(donationForm);
+        showFeedback(
+          donationForm,
+          "Thank you for your donation, we will contact you to arrange pickup.",
+          "white"
+        );
+        const errandsDesc = `Pick up a ${stuff} from ${postNr}`;
+        db.collection("notifications").add({
+          text: errandsDesc,
+          type: "errands"
+        });
+      });
   } else if (stuff !== "" && pickup === false) {
-    db.collection("stuffDonation").add({
-      stuff: stuff
-    });
+    db.collection("stuffDonation")
+      .add({
+        stuff: stuff
+      })
+      .then(() => {
+        resetForm(donationForm);
+        showFeedback(
+          donationForm,
+          "Thank you for your donation, looking forward to seeing you~",
+          "white"
+        );
+      });
   }
   if (onetimeMoney !== "" && inWhoseName !== "") {
-    db.collection("moneyDonation").add({
-      amount: onetimeMoney,
-      inTheNameOf: inWhoseName
-    });
+    db.collection("moneyDonation")
+      .add({
+        amount: onetimeMoney,
+        inTheNameOf: inWhoseName
+      })
+      .then(() => {
+        resetForm(donationForm);
+        showFeedback(
+          donationForm,
+          `Thank you and ${inWhoseName} for your donation, hope you can join us some day ~`,
+          "white"
+        );
+      });
   } else if (onetimeDonation !== "") {
-    db.collection("moneyDonation").add({
-      amount: onetimeMoney
-    });
+    db.collection("moneyDonation")
+      .add({
+        amount: onetimeMoney
+      })
+      .then(() => {
+        resetForm(donationForm);
+        showFeedback(
+          donationForm,
+          `Thank you for your donation, hope you can join us some day ~`,
+          "white"
+        );
+      });
   }
 }
 
@@ -656,9 +537,6 @@ function subscribe(e) {
     .then(console.log("successfully subscribed"));
 }
 
-// donate stuff on logged in page
-const stuffDonationForm = document.querySelector("#stuffDonationForm form");
-stuffDonationForm.addEventListener("submit", stuffDonate);
 function stuffDonate(e) {
   e.preventDefault();
   const userEmail = window.sessionStorage.getItem("userEmail");
@@ -670,7 +548,10 @@ function stuffDonate(e) {
       stuff: stuff,
       pickup: pickup
     })
-    .then(console.log("stuff donated"));
+    .then(() => {
+      resetForm(stuffDonationForm);
+      showFeedback(stuffDonationForm.parentElement, "Thank you ~", "#c18e63");
+    });
   if (pickup === true) {
     const errandsDesc = `Pick up a ${stuff} from ${userEmail}`;
     db.collection("notifications")
@@ -678,15 +559,20 @@ function stuffDonate(e) {
         text: errandsDesc,
         type: "errands"
       })
-      .then(
-        console.log("your donation will be picked up by one of our members")
-      );
+      .then(() => {
+        resetForm(stuffDonationForm);
+        showFeedback(
+          stuffDonationForm.parentElement,
+          "Thank you ~ Your donation will be picked up by one of our members",
+          "#c18e63"
+        );
+      });
   }
 }
 
-/**************************************
- * functions that GET data from database and display them
- *************************************/
+/*-------------------------------------------------------
+functions that GET data from database and display them
+--------------------------------------------------------*/
 function getUserDonationSofar(userEmail) {
   db.collection("timeDonation")
     .where("userEmail", "==", userEmail)
@@ -781,7 +667,7 @@ function getUserSetting(userEmail) {
     });
 }
 
-function getUserNotifications(userEmail) {
+function getUserNewsfeed(userEmail) {
   newsFeedPanel.innerHTML = "";
   // check user preferences regarding notifications
   db.collection("member")
@@ -796,7 +682,7 @@ function getUserNotifications(userEmail) {
           getNewcoming();
         }
         getUrgent();
-        getOtherNotification();
+        getOtherNewsfeed();
       });
     });
 }
@@ -839,7 +725,7 @@ function getUrgent() {
       });
     });
 }
-function getOtherNotification() {
+function getOtherNewsfeed() {
   db.collection("notifications")
     .where("type", "==", "other")
     .get()
@@ -861,16 +747,16 @@ function getUserAnimals(userEmail) {
     .then(res => {
       res.forEach(entry => {
         if (entry.data().seeCat && entry.data().seeDog === false) {
-          showCats(userEmail);
+          getCats(userEmail);
         } else if (entry.data().seeDog && entry.data().seeCat === false) {
-          showDogs(userEmail);
+          getDogs(userEmail);
         } else {
-          showAllAnimal(userEmail);
+          getAllAnimals(userEmail);
         }
       });
     });
 }
-function showCats(userEmail) {
+function getCats(userEmail) {
   db.collection("animals")
     .where("type", "==", "cat")
     .get()
@@ -878,21 +764,211 @@ function showCats(userEmail) {
       appendEachAnimal(res, userEmail);
     });
 }
-function showDogs(userEmail) {
+function getDogs(userEmail) {
+  console.log("show dog");
+
   db.collection("animals")
-    .where("type", "==", "Dog")
+    .where("type", "==", "dog")
     .get()
     .then(res => {
       appendEachAnimal(res, userEmail);
     });
 }
-function showAllAnimal(userEmail) {
+function getAllAnimals(userEmail) {
   db.collection("animals")
     .get()
     .then(res => {
       appendEachAnimal(res, userEmail);
     });
 }
+
+function getClickedAnimal(animalId) {
+  db.collection("animals")
+    .doc(animalId)
+    .get()
+    .then(res => {
+      petExpand.style.display = "grid";
+      showClickedAnimalModal(res.data(), animalId);
+    });
+}
+
+// show animal modal including getting relevant info from db
+function showClickedAnimalModal(data, animalID) {
+  const src = document
+    .querySelector(`.eachAnimal[data-id="${animalID}"] img`)
+    .getAttribute("src");
+  petExpand.innerHTML = "";
+  const clone = detailedAnimalTemp.cloneNode(true);
+  clone.querySelector(".bigAnimalImage img").setAttribute("src", src);
+  clone.querySelector(".animalName").textContent = data.name;
+  clone.querySelector(".animalBreed").textContent = data.breed;
+  clone.querySelector(".animalAge").textContent = data.age;
+  clone.querySelector(".animalGender").textContent = data.gender;
+  clone.querySelector(".animalSize").textContent = data.size;
+  if (!data.young) {
+    clone.querySelector(".animalPup").style.display = "none";
+  }
+  if (!data.pregnant) {
+    clone.querySelector(".animalPregnant").style.display = "none";
+  }
+  clone.querySelector(".animalStory").textContent = data.story;
+  clone.querySelector(".money").textContent = data.money;
+  clone.querySelector(".name").textContent = data.name;
+  // append the donation section of this animal
+  let donationClone = donationTemp.cloneNode(true);
+  donationClone.querySelector("form").setAttribute("data-id", animalID);
+  const donationForm = donationClone.querySelector("form");
+  // set min date for datepicker to yesterday (in JS getDate()+1 is today)
+  const today = new Date();
+  const year = today.getFullYear().toString();
+  const month =
+    today.getMonth() + 1 > 9
+      ? (today.getMonth() + 1).toString()
+      : "0" + (today.getMonth() + 1).toString();
+  const day =
+    today.getDate() > 9
+      ? today.getDate().toString()
+      : "0" + today.getDate().toString();
+  donationClone
+    .querySelector('input[type="date"')
+    .setAttribute("min", `${year}-${month}-${day}`);
+
+  const morning = donationClone.querySelector("label.morning");
+  const afternoon = donationClone.querySelector("label.afternoon");
+  const evening = donationClone.querySelector("label.evening");
+  const training = donationClone.querySelector("label.training");
+  // need to read db to get needed time slots
+  db.collection("dailyTaskTemplate")
+    .where("animalID", "==", animalID)
+    .get()
+    .then(res => {
+      res.forEach(entry => {
+        if (entry.data().morning === false) {
+          morning.classList.add("crossout");
+          morning.querySelector("input").setAttribute("disabled", "disabled");
+        }
+        if (entry.data().afternoon === false) {
+          afternoon.classList.add("crossout");
+          afternoon.querySelector("input").setAttribute("disabled", "disabled");
+        }
+        if (entry.data().evening === false) {
+          evening.classList.add("crossout");
+          evening.querySelector("input").setAttribute("disabled", "disabled");
+        }
+        if (entry.data().training === false) {
+          training.classList.add("crossout");
+          training.querySelector("input").setAttribute("disabled", "disabled");
+        }
+      });
+    });
+  donationForm.addEventListener("submit", validateMemberDonate);
+  function validateMemberDonate(e) {
+    e.preventDefault();
+    const donationSubmitForm = document.querySelector("#donationFormLogginIn");
+    const date = donationSubmitForm.date.value;
+    const morning = donationSubmitForm.morning.checked;
+    const afternoon = donationSubmitForm.afternoon.checked;
+    const evening = donationSubmitForm.evening.checked;
+    const training = donationSubmitForm.traning.checked;
+    if (
+      (morning === true ||
+        afternoon === true ||
+        evening === true ||
+        training === true) &&
+      !date
+    ) {
+      const wrapper = document.querySelector(".timeSlots");
+      showFeedback(wrapper, "Remember to pick a date", "#c18e63");
+    } else if (
+      morning !== true &&
+      afternoon !== true &&
+      evening !== true &&
+      training !== true &&
+      date
+    ) {
+      const wrapper = document.querySelector(".timeSlots");
+      showFeedback(
+        donationSubmitForm.querySelector(".timeSlots"),
+        "Remember to pick a time slot",
+        "#c18e63"
+      );
+    } else {
+      memberDonate(donationSubmitForm);
+    }
+  }
+  petExpand.appendChild(clone);
+  petExpand.appendChild(donationClone);
+  const closeExpandBtn = document.querySelector(".closeExpandBtn");
+
+  const triangleUp = document.querySelectorAll(".triangleUp");
+
+  closeExpandBtn.addEventListener("click", () => {
+    petExpand.style.display = "none";
+    hideArrayElements(triangleUp);
+  });
+}
+
+/*----------------------------------
+general display functions, reusable
+-----------------------------------*/
+
+function hideArrayElements(array) {
+  array.forEach(removeElement => {
+    removeElement.style.display = "none";
+  });
+}
+
+function showArrayElements(array) {
+  array.forEach(removeElement => {
+    removeElement.style.display = "block";
+  });
+}
+
+function showElement(ele) {
+  ele.classList.add("shownContent");
+}
+
+function hideElement(ele) {
+  ele.classList.remove("shownContent");
+}
+
+function toggleElements(showEle, hideEle) {
+  if (hideEle && hideEle.classList.contains("shownContent")) {
+    hideEle.classList.remove("shownContent");
+  }
+  showEle.classList.toggle("shownContent");
+}
+
+function resetForm(form) {
+  const allFormELements = form.querySelectorAll("*");
+  allFormELements.forEach(e => {
+    e.value = "";
+    if (e.checked) {
+      e.checked = false;
+    }
+  });
+}
+
+function clearContent(ele) {
+  const contentS = ele.querySelectorAll("span");
+  contentS.forEach(c => {
+    c.textContent = "";
+  });
+}
+
+function syncNrWithRange(form, element) {
+  const donationNr = form.querySelector(".donationNr");
+  element.textContent = preferenceForm.monthlyDonation.value;
+  form.querySelector('input[type="range"').addEventListener("change", e => {
+    element.textContent = e.target.value;
+  });
+}
+
+function showFeedback(form, error, color) {
+  form.querySelector(".feedbackMsg").textContent = error;
+  form.querySelector(".feedbackMsg").style.color = color;
+}
+
 function appendEachAnimal(array, userEmail) {
   animalListOnLoggedIn.innerHTML = "";
   array.forEach(entry => {
@@ -950,178 +1026,78 @@ function appendEachAnimal(array, userEmail) {
     animalDiv.appendChild(statusCircle);
     animalDiv.appendChild(animalArrow);
     animalDiv.addEventListener("click", e => {
+      // hide side panel if present
+      hideElement(userSettingPanel);
+      hideElement(newsFeedPanel);
+      // show animal modal with triangle pointer
       let arrows = e.target.parentElement.querySelectorAll(".triangleUp");
       hideArrayElements(arrows);
       e.target.querySelector(".triangleUp").style.display = "inherit";
-
-      showAnimalModal(entry.id);
+      getClickedAnimal(entry.id);
     });
     animalListOnLoggedIn.appendChild(animalDiv);
   });
   moveAnimals();
 }
 
-function showAnimalModal(animalId) {
-  db.collection("animals")
-    .doc(animalId)
-    .get()
-    .then(res => {
-      petExpand.style.display = "grid";
-      cloneAnimalInfo(res.data(), animalId);
-    });
-}
+/*-------------------------
+specific display functions
+-------------------------*/
 
-/**************************************
- * general display functions, reusable
- **************************************/
-
-function showElement(ele) {
-  ele.style.display = "inherit";
-  ele.classList.add("visible");
-}
-
-function hideElement(ele) {
-  ele.style.display = "none";
-  ele.classList.remove("visible");
-}
-
-function toggleElememnt(ele) {
-  ele.classList.toggle("visible");
-}
-
-function hideArrayElements(array) {
-  array.forEach(removeElement => {
-    removeElement.style.display = "none";
-  });
-}
-
-function resetForm(form) {
-  const allFormELements = form.querySelectorAll("*");
-  allFormELements.forEach(e => {
-    e.value = "";
-    if (e.checked) {
-      e.checked = false;
-    }
-  });
-}
-
-function syncNrWithRange(form, element) {
-  const donationNr = form.querySelector(".donationNr");
-  element.textContent = preferenceForm.monthlyDonation.value;
-  form.querySelector('input[type="range"').addEventListener("change", e => {
-    element.textContent = e.target.value;
-  });
-}
-
-/*--------------------------------------
-Intersection observer on the admin sidebar menu
--------------------------------------*/
-
-//get sections from the DOM
-const dailyTasksSection = document.querySelector(".animalTasks");
-const dailyTasksAnchor = document.querySelector("aside ul li:nth-child(1) a");
-const postAndNotifySection = document.querySelector(".postBtn");
-const postAndNotifyAnchor = document.querySelector(
-  "aside ul li:nth-child(2) a"
-);
-const statusSection = document.querySelector(".listOfDonations");
-const statusAnchor = document.querySelector("aside ul li:nth-child(3) a");
-
-//Observe daily tasks section
-let observerDailyTasks = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.intersectionRatio > 0) {
-      dailyTasksAnchor.classList.add("activeAnchor");
-      //postAndNotifyAnchor.classList.remove("activeAnchor");
-    } else {
-      dailyTasksAnchor.classList.remove("activeAnchor");
-    }
-  });
-});
-
-observerDailyTasks.observe(dailyTasksSection);
-
-//Observe post and notify section
-let postAndNotifyobserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.intersectionRatio > 0) {
-      postAndNotifyAnchor.classList.add("activeAnchor");
-      //dailyTasksAnchor.classList.remove("activeAnchor");
-      //statusAnchor.classList.remove("activeAnchor");
-    } else {
-      postAndNotifyAnchor.classList.remove("activeAnchor");
-    }
-  });
-});
-
-postAndNotifyobserver.observe(postAndNotifySection);
-
-//Observe status section
-let statusObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.intersectionRatio > 0) {
-      statusAnchor.classList.add("activeAnchor");
-      //postAndNotifyAnchor.classList.remove("activeAnchor");
-    } else {
-      statusAnchor.classList.remove("activeAnchor");
-    }
-  });
-});
-
-statusObserver.observe(statusSection);
-
-//Click to see more animals
-let changeTimes = 0;
-
+// Click left/right arrow to browse through animals
 function moveAnimals() {
   const leftKey = document.querySelector("#animalArrowLeft");
   const rightKey = document.querySelector("#animalArrowRight");
 
-  const moveAnimalList = document.querySelector("#animalList");
-
-  //const boundRect = moveAnimalList.getBoundingClientRect().width;
-
-  //console.log(boundRect);
-
-  //circular buffer
   leftKey.addEventListener("click", () => {
     const last = document.querySelector("#animalList").lastElementChild;
     const first = document.querySelector("#animalList").firstElementChild;
 
     last.remove();
-
     document.querySelector("#animalList").insertBefore(last, first);
-
-    //  changeTimes += 1;
-    //  moveAnimalList.style.left = 174 * changeTimes + "px";
   });
 
   rightKey.addEventListener("click", () => {
-    // find first element in animalList
     const first = document.querySelector("#animalList").firstElementChild;
 
-    //removeit
     first.remove();
-
-    //insert as lastelement
     document.querySelector("#animalList").appendChild(first);
+  });
+}
 
-    //changeTimes -= 1;
-    //moveAnimalList.style.left = 174 * changeTimes + "px";
-  });
-}
-/*--------------------------------------
-Open preference modal
--------------------------------------*/
-function preferenceSetting(email) {
-  // sync donation value text when user adjust range bar
-  syncNrWithRange(preferenceForm, preferenceForm.querySelector(".donationNr"));
-  // submit form in 2 ways
-  const submitPrefBtn = document.querySelector("#submitPrefBtn");
-  const skipPrefBtn = document.querySelector("#skipPrefBtn");
-  preferenceForm.addEventListener("submit", sendPreferenceToDatabase);
-  skipPrefBtn.addEventListener("click", () => {
-    sendPreferenceToDatabase();
-    hideElement(prefModal);
-  });
-}
+///////////// not used yet  ////////////////
+/*-------------------------------------------
+Upload an image to database
+------------------------------------------*/
+
+//get elements
+const uploader = document.querySelector("#uploader");
+const fileButton = document.querySelector("#fileButton");
+
+//listen for file selection
+
+fileButton.addEventListener("change", function(e) {
+  //get file
+  let file = e.target.files[0];
+
+  // document.querySelector('input[type="file"]').value.split(/(\\|\/)/g).pop();
+  //https://forums.asp.net/t/2027451.aspx?How%20to%20get%20file%20name%20selected%20in%20input%20type%20file%20&fbclid=IwAR1q1NmUJszE3bNt4Pn9tbY068Q9x4A2Ar2sWA39Tep5CUrpY2FdiTh5DA8
+
+  //create a storage ret
+  let storageRef = firebase.storage().ref("member/" + file.name);
+
+  //upload file
+  let task = storageRef.put(file);
+
+  // update progress bar
+  task.on(
+    "state_changed",
+    function progress(snapshot) {
+      let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    },
+    function error(err) {},
+    function complete() {
+      console.log("picture is uploaded");
+    }
+  );
+});

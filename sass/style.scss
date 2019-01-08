@@ -12,6 +12,7 @@ $grayColor: #efefef;
 $darkGrayColor: #cacaca;
 $purpleColor: #2e2f4b;
 $redColor: #a81c1c;
+$brownColor: #c18e63;
 $breakpoint-mobile: 450px;
 $breakpoint-medium1: 650px;
 $breakpoint-medium2: 900px;
@@ -33,10 +34,71 @@ main::-webkit-scrollbar,
 body {
   font-family: $font;
 }
-
-#addPetForm {
-  background-color: lightblue;
+.hiddenContent {
+  display: none;
 }
+.shownContent {
+  display: block;
+}
+.formWrapper {
+  position: relative;
+  .feedbackMsg {
+    text-align: right;
+    position: absolute;
+    right: 0;
+    bottom: 20px;
+    width: 100%;
+    height: auto;
+    padding: 0 40px;
+    font-size: 0.8em;
+  }
+}
+input:not([type="checkbox"]) {
+  width: 100%;
+  background: none;
+  font-size: 1em;
+  border: 0;
+  border-bottom: 1px solid grey;
+  font-family: inherit;
+
+  -webkit-appearance: none;
+  border-radius: 0;
+  padding: 0;
+  cursor: text;
+  &:focus {
+    outline: 0;
+    border-bottom: 1px solid $btnHover;
+  }
+  &.inline {
+    width: 5ch;
+  }
+}
+input:placeholder-shown + label {
+  cursor: text;
+  max-width: 66.66%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform-origin: left bottom;
+  transform: translate(0, 2.125rem) scale(1.2);
+}
+::-webkit-input-placeholder {
+  opacity: 0;
+  transition: inherit;
+}
+input:not(:placeholder-shown) + label,
+input:focus + label {
+  transition: 0.2s ease all;
+  transform: translate(0, 0) scale(1);
+  cursor: pointer;
+}
+input,
+label {
+  touch-action: manipulation;
+}
+// #addPetForm {
+//   background-color: lightblue;
+// }
 
 /* -----------------------
         Navbar 
@@ -52,19 +114,14 @@ body {
   grid-template-columns: 1fr 1fr;
   box-shadow: 0px 3px 20px 3px rgba(195, 195, 195, 0.77);
   img {
-    width: 150px;
-    padding: 18px;
+    height: 60px;
+    padding: 13px;
     fill: #818181;
     align-self: center;
   }
   //navbar on signed in page
   #sidebarBtns {
-    display: none;
     justify-self: end;
-    img {
-      width: 65px;
-      padding: 13px;
-    }
     #newsBtn {
       margin-right: 10px;
     }
@@ -95,9 +152,9 @@ body {
       color: $purpleColor;
     }
   }
-  #signoutAdmin {
-    display: none;
-  }
+  // #signoutAdmin {
+  //   display: none;
+  // }
 }
 
 /*------------------------------
@@ -112,8 +169,6 @@ button:focus {
 
 #loginForm {
   background-color: white;
-
-  display: none;
   position: fixed;
   z-index: 10;
   right: 0;
@@ -153,7 +208,7 @@ button:focus {
 #messageForm,
 #imageForm,
 #stuffDonationForm {
-  padding: 40px;
+  padding: 40px 40px 60px 40px;
   color: grey;
   h2 {
     margin-bottom: 20px;
@@ -236,7 +291,7 @@ button:focus {
 
 #donationForm,
 #signupForm {
-  padding: 40px;
+  padding: 40px 40px 60px 40px;
   h2 {
     margin-bottom: 20px;
   }
@@ -449,7 +504,7 @@ button:focus {
       }
     }
     p {
-      color: #c18e63;
+      color: $brownColor;
     }
   }
   .introPic {
@@ -680,13 +735,13 @@ button:focus {
     border-radius: 30px;
     display: grid;
     margin: 5vw 0 10vw 0;
-    padding: 40px;
+    padding: 40px 40px 60px 40px;
     border-radius: 30px;
   }
   #donationForm,
   #signupForm {
     margin: 3vw 10vw 10vw 10vw;
-    padding: 40px;
+    padding: 40px 40px 60px 40px;
     border-radius: 30px;
   }
 }
@@ -715,6 +770,9 @@ button:focus {
         margin-top: 15px;
         width: 100%;
       }
+      .whoswName {
+        font-size: 14px;
+      }
       form {
         button {
           margin-top: 50px;
@@ -739,7 +797,7 @@ button:focus {
 #signedInContent {
   #aboutLoggedIn {
     width: 100%;
-    color: #c18e63;
+    color: $brownColor;
     padding: 5vw 10vw 0 10vw;
     background-color: #ead8a6;
     h2 {
@@ -918,6 +976,9 @@ button:focus {
         h3 {
           padding: 10px;
         }
+        .timeSlots {
+          padding-bottom: 40px;
+        }
         #donationBtn {
           font-size: 13px;
           font-family: "Raleway", sans-serif;
@@ -1030,7 +1091,7 @@ button:focus {
   #userSettings,
   #newsFeed {
     color: #717070;
-    display: none;
+    // display: none;
     box-shadow: 3px 1px 17px 3px rgba(155, 155, 155, 0.68);
     z-index: 3;
     height: calc(100vh - 60px);
@@ -1041,8 +1102,8 @@ button:focus {
     top: 60px;
     width: 280px;
     padding: 20px;
-    & > * {
-    }
+    // & > * {
+    // }
 
     h2 {
       padding-bottom: 10px;
@@ -1450,12 +1511,16 @@ Keyframes for border radius header image
 /* -----------------------
         footer 
 ------------------------*/
-#footer {
+footer {
   padding: 50px 10vw;
   color: #ffffff;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  position: relative;
   background-color: #a6bdb7;
+  & > * {
+    width: 50%;
+    display: inline-block;
+    vertical-align: top;
+  }
   h3 {
     margin-bottom: 20px;
   }
@@ -1468,9 +1533,9 @@ Keyframes for border radius header image
     }
   }
 }
-.visible {
-  display: block !important;
-}
+// .visible {
+//   display: block !important;
+// }
 
 /* -----------------------
         admin 
@@ -2090,6 +2155,14 @@ Keyframes for border radius header image
   }
   .statistiOfAnimals {
     margin-top: 20px;
+    // .statisticDiagram {
+    //   height: 150px;
+    //   width: 100%;
+    //   border: 1px solid black;
+    //   margin: auto;
+    //   margin-top: 20px;
+    //   margin-bottom: 20px;
+    // }
     #curve_chart {
       width: 100%;
       height: 200px;
@@ -2229,6 +2302,30 @@ Keyframes for border radius header image
           left: 5vw;
           height: 20px;
         }
+        // div:nth-child(1) {
+        //   width: 30px;
+        //   top: 18vh;
+        //   right: 20vw;
+        //   height: 30px;
+        // }
+        // div:nth-child(2) {
+        //   width: 15px;
+        //   top: 15vh;
+        //   right: 15vw;
+        //   height: 15px;
+        // }
+        // div:nth-child(3) {
+        //   width: 13px;
+        //   top: 30vh;
+        //   right: 20vw;
+        //   height: 13px;
+        // }
+        // div:nth-child(4) {
+        //   width: 15px;
+        //   top: 25vh;
+        //   left: 20vw;
+        //   height: 15px;
+        // }
       }
       .introCat {
         top: 320px;
@@ -2295,7 +2392,12 @@ Keyframes for border radius header image
     }
   }
 
-  #footer {
+  footer {
+    & > * {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
     .contactBox {
       h3 {
         font-size: 16px;
@@ -2375,7 +2477,7 @@ Keyframes for border radius header image
     #donationForm,
     #stuffDonationForm {
       margin: 10vw;
-      padding: 40px;
+      padding: 40px 40px 60px 40px;
       h2 {
         font-size: 20px;
         margin-top: 0px;
@@ -2537,14 +2639,17 @@ Keyframes for border radius header image
   }
 
   // here comes the footer
-  #footer {
+  footer {
+    & > * {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
     padding: 30px;
     padding-left: 95px;
     padding-right: 95px;
-    grid-template-columns: 1fr;
 
     #subscribeForm {
-      grid-row-start: 1;
       h3 {
         margin-bottom: 10px;
         font-size: 17px;
@@ -2597,6 +2702,7 @@ Keyframes for border radius header image
   #signedInContent {
     #userSettings,
     #newsFeed {
+      display: block;
       width: 100vw;
       padding: 50px;
       padding-bottom: 100px;
@@ -2624,7 +2730,7 @@ Keyframes for border radius header image
 
   #newsBtn,
   #settingBtn {
-    display: none;
+    // display: none;
   }
 
   #mobileMenu {
@@ -2737,7 +2843,6 @@ Keyframes for border radius header image
       .catchphrase {
         text-align: center;
         h1 {
-          padding-top: 65px;
           font-size: 10vw;
           span {
             font-size: 15vw;
@@ -2859,12 +2964,15 @@ Keyframes for border radius header image
   }
 
   // here comes the footer
-  #footer {
+  footer {
+    & > * {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+
     padding: 30px 10vw 100px 10vw;
-    grid-template-columns: 1fr;
 
     #subscribeForm {
-      grid-row-start: 1;
       h3 {
         margin-bottom: 10px;
         font-size: 15px;
